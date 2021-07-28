@@ -3,6 +3,14 @@
 const { readFile } = require("fs").promises;
 const path = require("path");
 const QRCode = require("qrcode");
+const dayjs = require("dayjs");
+const isBetween = require("dayjs/plugin/isBetween");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+dayjs.extend(isBetween);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Shanghai");
 
 module.exports = {
     async getToken() {
@@ -437,26 +445,60 @@ module.exports = {
             },
             dataType: "json"
         });
-        return body.data.dataList;
+        return body.data.detailList;
     },
 
     async getTotalBean() {
-        const envs = await this.envHelper();
-        let data = [];
-        for (const env of envs) {
-            this.config.currentCookie = env.value;
-            const pt_pin = env.value.match(/pt_pin=(.*?);/)[1];
-            let { nickName, beanNum } = await this.getNicknameOrBean(true);
-            let result = await this.getJingBeanBalanceDetail(1);
-            console.log(result);
-            data.push({
-                pt_pin: pt_pin,
-                nickName: nickName,
-                beanNum
-            });
-            break;
+        // 定时任务,每天统计获得豆子总数
+        let result = [
+            { date: "2021-07-28 12:18:52", amount: "1", eventMassage: "观看任务02" },
+            { date: "2021-07-28 12:18:51", amount: "1", eventMassage: "分享任务02" },
+            { date: "2021-07-28 12:10:58", amount: "1", eventMassage: "签到每日奖励" },
+            { date: "2021-07-28 12:10:58", amount: "1", eventMassage: "观看任务01" },
+            { date: "2021-07-28 12:10:58", amount: "1", eventMassage: "分享任务01" },
+            { date: "2021-07-28 12:09:51", amount: "5", eventMassage: "东东农场转盘抽奖活动" },
+            { date: "2021-07-28 12:08:59", amount: "2", eventMassage: "东东农场转盘抽奖活动" },
+            { date: "2021-07-28 12:08:56", amount: "2", eventMassage: "东东农场转盘抽奖活动" },
+            { date: "2021-07-28 11:19:20", amount: "1", eventMassage: "来客有礼京豆奖励" },
+            { date: "2021-07-28 11:18:47", amount: "2", eventMassage: "来客有礼京豆奖励" },
+            { date: "2021-07-27 09:00:21", amount: "3", eventMassage: "双签礼包" },
+            { date: "2021-07-26 09:00:17", amount: "2", eventMassage: "闪购大牌日瓜分京豆游戏得京豆" }
+        ];
+        let aaa = [];
+        for (let i = 0; i < result.length; i++) {
+            const element = result[i];
+
+            let result1 = dayjs(element.date).isBetween(`${dayjs().format("YYYY-MM-DD")}`, dayjs().add(1, "day").format("YYYY-MM-DD HH:mm:ss"));
+            if (result1) {
+                aaa.push(element);
+            }
         }
-        return data;
+
+        console.log(aaa);
+
+        // const envs = await this.envHelper();
+        // let data = [];
+        // for (const env of envs) {
+        //     this.config.currentCookie = env.value;
+        //     const pt_pin = env.value.match(/pt_pin=(.*?);/)[1];
+        //     let { nickName, beanNum } = await this.getNicknameOrBean(true);
+
+        //     // let page = 1;
+        //     // let condition = 1;
+        //     // while (condition === 1) {
+        //     //     let result = await this.getJingBeanBalanceDetail(1);
+
+        //     //     page++;
+        //     // }
+        //     console.log(result);
+        //     data.push({
+        //         pt_pin: pt_pin,
+        //         nickName: nickName,
+        //         beanNum
+        //     });
+        //     break;
+        // }
+        return aaa;
     }
 };
 
