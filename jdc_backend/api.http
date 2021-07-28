@@ -1,0 +1,8 @@
+@url = http://127.0.0.1:7001
+
+
+
+GET {{url}}/api/getAllUser HTTP/1.1
+
+###
+GET {{url}}/ HTTP/1.1
