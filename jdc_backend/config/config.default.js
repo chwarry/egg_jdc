@@ -28,7 +28,8 @@ module.exports = (appInfo) => {
         QL_DIR: "/ql",
         ALLOW_NUM: 100,
         ALLOW_ADD: 1,
-        NOTIFY: 0
+        NOTIFY: 0,
+        UA: ""
     };
 
     return {

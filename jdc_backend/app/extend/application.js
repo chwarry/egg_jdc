@@ -12,7 +12,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Shanghai");
 
-const { randonUserAgent } = require("./helper");
+const { random_time_ua } = require("./helper");
 
 module.exports = {
     async getToken() {
@@ -235,7 +235,7 @@ module.exports = {
                 Accept: "application/json, text/plain, */*",
                 "Accept-Language": "zh-cn",
                 Referer: taskUrl,
-                "User-Agent": randonUserAgent(),
+                "User-Agent": this.config.UA || random_time_ua(),
                 Host: "plogin.m.jd.com"
             },
             dataType: "json"
@@ -264,7 +264,7 @@ module.exports = {
                 Accept: "application/json, text/plain, */*",
                 "Accept-Language": "zh-cn",
                 Referer: taskUrl,
-                "User-Agent": randonUserAgent(),
+                "User-Agent": this.config.UA || random_time_ua(),
                 Host: "plogin.m.jd.com",
                 Cookie: cookies
             },
@@ -309,7 +309,7 @@ module.exports = {
                 Accept: "application/json, text/plain, */*",
                 "Accept-Language": "zh-cn",
                 Referer: loginUrl,
-                "User-Agent": randonUserAgent(),
+                "User-Agent": this.config.UA || random_time_ua(),
                 Cookie: this.config.cookies
             },
             dataType: "json"
