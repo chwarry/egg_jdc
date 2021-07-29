@@ -12,6 +12,8 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("Asia/Shanghai");
 
+const { randonUserAgent } = require("./helper");
+
 module.exports = {
     async getToken() {
         const qlDir = this.config.QL_DIR || "/ql";
@@ -64,14 +66,10 @@ module.exports = {
                 eid = result._id;
                 timestamp = result.timestamp;
                 message = `添加成功，可以愉快的白嫖啦 ${nickname}`;
+                await this.getUserInfoByEid(eid);
+                const pt_pin = this.config.currentCookie.match(/pt_pin=(.*?);/)[1];
                 // 发送通知
-                // exec(`${notifyFile} "Ninja 运行通知" "工具人 ${nickname}(${decodeURIComponent(this.pt_pin)}) 已上线"`, (error, stdout, stderr) => {
-                //     if (error) {
-                //         console.log(stderr);
-                //     } else {
-                //         console.log(stdout);
-                //     }
-                // });
+                this.sendNotify("egg_jdc 运行通知", `用户 ${nickName}(${decodeURIComponent(pt_pin)}) 已上线"`);
             }
         } else {
             eid = env._id;
@@ -81,13 +79,9 @@ module.exports = {
             }
             timestamp = body.data.timestamp;
             message = `欢迎回来，${nickname}`;
-            // exec(`${notifyFile} "Ninja 运行通知" "工具人 ${nickname}(${decodeURIComponent(this.pt_pin)}) 更新了 CK"`, (error, stdout, stderr) => {
-            //     if (error) {
-            //         console.log(stderr);
-            //     } else {
-            //         console.log(stdout);
-            //     }
-            // });
+            await this.getUserInfoByEid(eid);
+            const pt_pin = this.config.currentCookie.match(/pt_pin=(.*?);/)[1];
+            this.sendNotify("egg_jdc 运行通知", `用户 ${nickname}(${decodeURIComponent(pt_pin)}) 已更新 CK"`);
         }
         return {
             code: 0,
@@ -241,8 +235,7 @@ module.exports = {
                 Accept: "application/json, text/plain, */*",
                 "Accept-Language": "zh-cn",
                 Referer: taskUrl,
-                "User-Agent":
-                    "jdapp;android;10.0.5;11;0393465333165363-5333430323261366;network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36",
+                "User-Agent": randonUserAgent(),
                 Host: "plogin.m.jd.com"
             },
             dataType: "json"
@@ -271,8 +264,7 @@ module.exports = {
                 Accept: "application/json, text/plain, */*",
                 "Accept-Language": "zh-cn",
                 Referer: taskUrl,
-                "User-Agent":
-                    "jdapp;android;10.0.5;11;0393465333165363-5333430323261366;network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36",
+                "User-Agent": randonUserAgent(),
                 Host: "plogin.m.jd.com",
                 Cookie: cookies
             },
@@ -317,8 +309,7 @@ module.exports = {
                 Accept: "application/json, text/plain, */*",
                 "Accept-Language": "zh-cn",
                 Referer: loginUrl,
-                "User-Agent":
-                    "jdapp;android;10.0.5;11;0393465333165363-5333430323261366;network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36",
+                "User-Agent": randonUserAgent(),
                 Cookie: this.config.cookies
             },
             dataType: "json"
@@ -400,13 +391,9 @@ module.exports = {
         if (body.code !== 200) {
             throw new qlError(body.message || "删除账户错误，请重试", -1, 200);
         }
-        exec(`${notifyFile} "Ninja 运行通知" "工具人 ${this.nickName}(${decodeURIComponent(this.pt_pin)}) 删号跑路了"`, (error, stdout, stderr) => {
-            if (error) {
-                console.log(stderr);
-            } else {
-                console.log(stdout);
-            }
-        });
+        let { nickName } = await this.getUserInfoByEid(eid);
+        const pt_pin = this.config.currentCookie.match(/pt_pin=(.*?);/)[1];
+        this.sendNotify("egg_jdc 运行通知", `用户 ${nickName}(${decodeURIComponent(pt_pin)}) 删号跑路了"`);
         return {
             code: 0,
             message: "账户已移除"
@@ -499,6 +486,20 @@ module.exports = {
         //     break;
         // }
         return aaa;
+    },
+
+    async sendNotify(title, content) {
+        if (!this.config.NOTIFY) {
+            console.log("Ninja 通知已关闭\n" + title + "\n" + content + "\n" + "已跳过发送");
+            return;
+        }
+        exec(`${notifyFile} "${title}" "${content}"`, (error, stdout, stderr) => {
+            if (error) {
+                console.log(stderr);
+            } else {
+                console.log(stdout);
+            }
+        });
     }
 };
 

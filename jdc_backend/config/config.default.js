@@ -27,7 +27,8 @@ module.exports = (appInfo) => {
         QL_URL: "", // 青龙地址
         QL_DIR: "/ql",
         ALLOW_NUM: 100,
-        ALLOW_ADD: 1
+        ALLOW_ADD: 1,
+        NOTIFY: 0
     };
 
     return {
