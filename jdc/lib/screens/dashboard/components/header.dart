@@ -1,4 +1,4 @@
-import 'package:jdc/controllers/MenuController.dart';
+import 'package:jdc/controllers/AppStateController.dart';
 import 'package:jdc/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +18,7 @@ class Header extends StatelessWidget {
         if (!Responsive.isDesktop(context))
           IconButton(
             icon: Icon(Icons.menu),
-            onPressed: context.read<MenuController>().controlMenu,
+            onPressed: context.read<AppStateController>().controlMenu,
           ),
         if (!Responsive.isMobile(context))
           Text(
