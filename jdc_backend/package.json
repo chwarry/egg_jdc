@@ -12,7 +12,9 @@
         "egg": "^2.15.1",
         "egg-scripts": "^2.11.0",
         "lodash": "^4.17.21",
-        "qrcode": "^1.4.4"
+        "nedb": "^1.8.0",
+        "qrcode": "^1.4.4",
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
         "autod": "^3.0.1",

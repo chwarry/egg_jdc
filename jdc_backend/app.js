@@ -1,6 +1,8 @@
 "use strict";
 
 const { EventEmitter } = require("events");
+const Datastore = require("nedb");
+const path = require("path");
 
 EventEmitter.defaultMaxListeners = 30;
 class AppBootHook {
@@ -9,6 +11,19 @@ class AppBootHook {
     }
     async didLoad() {
         // 所有的配置已经加载完毕
+        this.app.nowdb = new Datastore({ filename: path.join(process.cwd(), "user.db"), timestampData: true });
+        this.app.nowdb.loadDatabase((err) => {
+            if (err) throw err;
+        });
+        // this.app.transporter = nodemailer.createTransport({
+        //     host: "smtp.qq.com",
+        //     secureConnection: true,
+        //     port: 465,
+        //     auth: {
+        //         user: this.app.config.email,
+        //         pass: "mqfangbpkpnzcbdj"
+        //     }
+        // });
     }
 
     async beforeClose() {}

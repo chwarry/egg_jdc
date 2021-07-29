@@ -14,6 +14,8 @@ dayjs.tz.setDefault("Asia/Shanghai");
 
 const { random_time_ua } = require("./helper");
 
+const { v4: uuidv4 } = require("uuid");
+
 module.exports = {
     async getToken() {
         const qlDir = this.config.QL_DIR || "/ql";
@@ -435,26 +437,41 @@ module.exports = {
         return body.data.detailList;
     },
 
-    async getTotalBean(type) {
-        // 定时任务,每天统计获得豆子总数
+    async getBeanByMouth(type, eid) {
         let befroeDate1 = "";
         let befroeDate2 = "";
         switch (type) {
             case 0:
-                // 7天京豆变化
+                // 1个月京豆变化
                 befroeDate1 = `${dayjs().subtract(7, "day").format("YYYY-MM-DD")}`;
-                befroeDate2 = dayjs().add(1, "day").format("YYYY-MM-DD HH:mm:ss");
+                befroeDate2 = dayjs().add(1, "day").format("YYYY-MM-DD");
                 break;
             case 1:
                 // 1个月京豆变化
                 befroeDate1 = `${dayjs().subtract(1, "mouth").format("YYYY-MM-DD")}`;
-                befroeDate2 = dayjs().add(1, "day").format("YYYY-MM-DD HH:mm:ss");
+                befroeDate2 = dayjs().add(1, "day").format("YYYY-MM-DD");
                 break;
 
             default:
                 break;
         }
+        // 拿到这个人的记录
+        let result = await this.findDoc({ _id: eid });
+        let beanList = [];
+        for (let i = 0; i < result.todayBeanNumber.length; i++) {
+            const element = result.todayBeanNumber[i];
+            let flag = dayjs(element.date).isBetween(befroeDate1, befroeDate2, type == 0 ? "day" : "mouth");
+            if (flag) {
+                beanList.push(element);
+            } else {
+                break;
+            }
+        }
+        return beanList;
+    },
 
+    async getTotalBean() {
+        // 定时任务,每天统计获得豆子总数
         const envs = await this.envHelper();
         let todayBeanChange = [];
         for (const env of envs) {
@@ -463,13 +480,13 @@ module.exports = {
             let { nickName, beanNum } = await this.getNicknameOrBean(true);
             let condition = 0;
             let page = 1;
+            let todaybeanList = [];
             do {
                 let beanList = await this.getJingBeanBalanceDetail(page);
                 let breakflag = false;
-                let todaybeanList = [];
                 for (let i = 0; i < beanList.length; i++) {
                     const element = beanList[i];
-                    let flag = dayjs(element.date).isBetween(befroeDate1, befroeDate2);
+                    let flag = dayjs(element.date).isBetween(`${dayjs().format("YYYY-MM-DD")}`, dayjs().add(1, "day").format("YYYY-MM-DD"));
                     if (flag) {
                         todaybeanList.push(Number(element.amount));
                     } else {
@@ -483,19 +500,75 @@ module.exports = {
                 page++;
             } while (condition === 0);
 
-            console.log(todaybeanList);
             let tadayBeanNumber = todaybeanList.reduce((a, b) => {
                 return a + b;
             }, 0);
-            todayBeanChange.push({
-                pt_pin: pt_pin,
-                nickName: nickName,
-                totalBeanNumber: beanNum,
-                todayBeanNumber: tadayBeanNumber
-            });
-            break;
+            // 查询数据有没有数据
+            let result = await this.findDoc({ _id: env._id });
+
+            let doc;
+            if (result.length > 0) {
+                let index = result.todayBeanNumber.findIndex((v) => {
+                    return v.date == dayjs().format("YYYY-MM-DD");
+                });
+                result.todayBeanNumber[index] = {
+                    date: dayjs().format("YYYY-MM-DD"),
+                    tadayBeanNumber
+                };
+                doc = await this.updateDoc(result);
+            } else {
+                let itr = {
+                    id: env._id,
+                    pt_pin: pt_pin,
+                    nickName: nickName,
+                    totalBeanNumber: beanNum,
+                    todayBeanNumber: [
+                        {
+                            date: dayjs().format("YYYY-MM-DD"),
+                            tadayBeanNumber
+                        }
+                    ]
+                };
+                doc = await this.inertDoc(itr);
+            }
+            todayBeanChange.push(doc);
         }
         return todayBeanChange;
+    },
+
+    async findDoc(partern) {
+        return new Promise((resolve) => {
+            this.nowdb.find(partern, (err, docs) => {
+                if (err) {
+                    this.logger.error(err);
+                } else {
+                    resolve(docs);
+                }
+            });
+        });
+    },
+
+    async inertDoc(doc) {
+        return new Promise((resolve) => {
+            this.nowdb.insert(doc, (err, docs) => {
+                if (err) {
+                    this.logger.error(err);
+                } else {
+                    resolve(docs);
+                }
+            });
+        });
+    },
+    async updateDoc(doc) {
+        return new Promise((resolve) => {
+            this.nowdb.update({ _id: doc._id }, doc, { returnUpdatedDocs: true }, (err, num, docs) => {
+                if (err) {
+                    this.logger.error(err);
+                } else {
+                    resolve(docs);
+                }
+            });
+        });
     },
 
     async sendNotify(title, content) {
