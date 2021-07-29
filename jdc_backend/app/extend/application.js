@@ -427,7 +427,7 @@ module.exports = {
                 Cookie: this.config.currentCookie
             },
             data: {
-                body: JSON.stringify({ pageSize: "20", page: page.toString() }),
+                body: JSON.stringify({ pageSize: "1000", page: page.toString() }),
                 appid: "ld"
             },
             dataType: "json"
@@ -435,57 +435,67 @@ module.exports = {
         return body.data.detailList;
     },
 
-    async getTotalBean() {
+    async getTotalBean(type) {
         // 定时任务,每天统计获得豆子总数
-        let result = [
-            { date: "2021-07-28 12:18:52", amount: "1", eventMassage: "观看任务02" },
-            { date: "2021-07-28 12:18:51", amount: "1", eventMassage: "分享任务02" },
-            { date: "2021-07-28 12:10:58", amount: "1", eventMassage: "签到每日奖励" },
-            { date: "2021-07-28 12:10:58", amount: "1", eventMassage: "观看任务01" },
-            { date: "2021-07-28 12:10:58", amount: "1", eventMassage: "分享任务01" },
-            { date: "2021-07-28 12:09:51", amount: "5", eventMassage: "东东农场转盘抽奖活动" },
-            { date: "2021-07-28 12:08:59", amount: "2", eventMassage: "东东农场转盘抽奖活动" },
-            { date: "2021-07-28 12:08:56", amount: "2", eventMassage: "东东农场转盘抽奖活动" },
-            { date: "2021-07-28 11:19:20", amount: "1", eventMassage: "来客有礼京豆奖励" },
-            { date: "2021-07-28 11:18:47", amount: "2", eventMassage: "来客有礼京豆奖励" },
-            { date: "2021-07-27 09:00:21", amount: "3", eventMassage: "双签礼包" },
-            { date: "2021-07-26 09:00:17", amount: "2", eventMassage: "闪购大牌日瓜分京豆游戏得京豆" }
-        ];
-        let aaa = [];
-        for (let i = 0; i < result.length; i++) {
-            const element = result[i];
+        let befroeDate1 = "";
+        let befroeDate2 = "";
+        switch (type) {
+            case 0:
+                // 7天京豆变化
+                befroeDate1 = `${dayjs().subtract(7, "day").format("YYYY-MM-DD")}`;
+                befroeDate2 = dayjs().add(1, "day").format("YYYY-MM-DD HH:mm:ss");
+                break;
+            case 1:
+                // 1个月京豆变化
+                befroeDate1 = `${dayjs().subtract(1, "mouth").format("YYYY-MM-DD")}`;
+                befroeDate2 = dayjs().add(1, "day").format("YYYY-MM-DD HH:mm:ss");
+                break;
 
-            let result1 = dayjs(element.date).isBetween(`${dayjs().format("YYYY-MM-DD")}`, dayjs().add(1, "day").format("YYYY-MM-DD HH:mm:ss"));
-            if (result1) {
-                aaa.push(element);
-            }
+            default:
+                break;
         }
 
-        console.log(aaa);
+        const envs = await this.envHelper();
+        let todayBeanChange = [];
+        for (const env of envs) {
+            this.config.currentCookie = env.value;
+            const pt_pin = env.value.match(/pt_pin=(.*?);/)[1];
+            let { nickName, beanNum } = await this.getNicknameOrBean(true);
+            let condition = 0;
+            let page = 1;
+            do {
+                let beanList = await this.getJingBeanBalanceDetail(page);
+                let breakflag = false;
+                let todaybeanList = [];
+                for (let i = 0; i < beanList.length; i++) {
+                    const element = beanList[i];
+                    let flag = dayjs(element.date).isBetween(befroeDate1, befroeDate2);
+                    if (flag) {
+                        todaybeanList.push(Number(element.amount));
+                    } else {
+                        breakflag = true;
+                        break;
+                    }
+                }
+                if (breakflag) {
+                    break;
+                }
+                page++;
+            } while (condition === 0);
 
-        // const envs = await this.envHelper();
-        // let data = [];
-        // for (const env of envs) {
-        //     this.config.currentCookie = env.value;
-        //     const pt_pin = env.value.match(/pt_pin=(.*?);/)[1];
-        //     let { nickName, beanNum } = await this.getNicknameOrBean(true);
-
-        //     // let page = 1;
-        //     // let condition = 1;
-        //     // while (condition === 1) {
-        //     //     let result = await this.getJingBeanBalanceDetail(1);
-
-        //     //     page++;
-        //     // }
-        //     console.log(result);
-        //     data.push({
-        //         pt_pin: pt_pin,
-        //         nickName: nickName,
-        //         beanNum
-        //     });
-        //     break;
-        // }
-        return aaa;
+            console.log(todaybeanList);
+            let tadayBeanNumber = todaybeanList.reduce((a, b) => {
+                return a + b;
+            }, 0);
+            todayBeanChange.push({
+                pt_pin: pt_pin,
+                nickName: nickName,
+                totalBeanNumber: beanNum,
+                todayBeanNumber: tadayBeanNumber
+            });
+            break;
+        }
+        return todayBeanChange;
     },
 
     async sendNotify(title, content) {

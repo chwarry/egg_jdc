@@ -4,10 +4,24 @@ const Controller = require("egg").Controller;
 
 class HomeController extends Controller {
     async index() {
-        let result = await this.app.getTotalBean();
+        let result = await this.app.getTotalBean(0);
         this.ctx.response.success({
             data: result
         });
+    }
+
+    async getBeanChange() {
+        try {
+            let result = await this.app.getTotalBean(this.ctx.query.type);
+            this.ctx.response.success({
+                data: result
+            });
+        } catch (error) {
+            this.ctx.response.failure({
+                code: -1,
+                message: "接口限制, 访问失败!"
+            });
+        }
     }
 
     async qrCode() {

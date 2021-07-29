@@ -24,7 +24,7 @@ module.exports = (appInfo) => {
         okl_token: "",
         cookies: "",
         currentCookie: "",
-        QL_URL: "", // 青龙地址
+        QL_URL: "https://jd.lppfk.top", // 青龙地址
         QL_DIR: "/ql",
         ALLOW_NUM: 100,
         ALLOW_ADD: 1,

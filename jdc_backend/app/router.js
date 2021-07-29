@@ -14,4 +14,5 @@ module.exports = (app) => {
     router.delete("/api/emaaccount", controller.home.enableAccount);
     router.put("/api/update/remark", controller.home.updateMark);
     router.get("/api/getAllUser", controller.home.getAllUser);
+    router.get("/api/getBeanChange", controller.home.getBeanChange);
 };
