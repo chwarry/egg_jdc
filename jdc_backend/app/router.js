@@ -10,9 +10,11 @@ module.exports = (app) => {
     router.post("/api/check", controller.home.check);
     router.get("/api/userinfo", controller.home.userInfo);
     router.delete("/api/delaccount", controller.home.delAccount);
-    router.delete("/api/disaccount", controller.home.disableAccount);
-    router.delete("/api/emaaccount", controller.home.enableAccount);
+    router.put("/api/disaccount", controller.home.disableAccount);
+    router.put("/api/emaaccount", controller.home.enableAccount);
     router.put("/api/update/remark", controller.home.updateMark);
     router.get("/api/getAllUser", controller.home.getAllUser);
     router.get("/api/getBeanChange", controller.home.getBeanChange);
+    router.get("/api/getNodeInfo", controller.home.getNodeInfo);
+    router.get("/api/getNodeList", controller.home.getNodeList);
 };

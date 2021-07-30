@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:jdc/controllers/ScreenStateController.dart';
+import 'package:jdc/util/store.dart';
 
-class SideMenu extends StatelessWidget {
+class SideMenu extends StatefulWidget {
   const SideMenu({
     Key? key,
   }) : super(key: key);
+
+  @override
+  _SideMenuState createState() => _SideMenuState();
+}
+
+class _SideMenuState extends State<SideMenu> {
+  ScreenStateController? screenStateController;
+
+  @override
+  void initState() {
+    screenStateController = Store.value<ScreenStateController>(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,27 +32,30 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: "运行面板",
             svgSrc: "assets/icons/menu_dashbord.svg",
-            press: () {},
+            press: () {
+              screenStateController!.setScreenIndex(0);
+            },
           ),
           DrawerListTile(
             title: "扫码",
             svgSrc: "assets/icons/menu_store.svg",
-            press: () {},
-          ),
-          DrawerListTile(
-            title: "管理账号",
-            svgSrc: "assets/icons/menu_tran.svg",
-            press: () {},
+            press: () {
+              screenStateController!.setScreenIndex(1);
+            },
           ),
           DrawerListTile(
             title: "任务列表",
             svgSrc: "assets/icons/menu_task.svg",
-            press: () {},
+            press: () {
+              screenStateController!.setScreenIndex(2);
+            },
           ),
           DrawerListTile(
             title: "京豆变化",
             svgSrc: "assets/icons/menu_profile.svg",
-            press: () {},
+            press: () {
+              screenStateController!.setScreenIndex(3);
+            },
           ),
           // DrawerListTile(
           //   title: "Notification",
@@ -52,7 +70,9 @@ class SideMenu extends StatelessWidget {
           DrawerListTile(
             title: "设置",
             svgSrc: "assets/icons/menu_setting.svg",
-            press: () {},
+            press: () {
+              screenStateController!.setScreenIndex(4);
+            },
           ),
         ],
       ),

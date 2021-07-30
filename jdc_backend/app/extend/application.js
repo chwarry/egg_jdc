@@ -17,6 +17,12 @@ const { random_time_ua } = require("./helper");
 const { v4: uuidv4 } = require("uuid");
 
 module.exports = {
+    async getNodeList() {
+        let filePath = path.join(process.cwd(), "nodelist.json");
+        let resdata = await readFile(filePath, { encoding: "utf-8" });
+        return JSON.parse(resdata);
+    },
+
     async getToken() {
         const qlDir = this.config.QL_DIR || "/ql";
         const authFile = path.join(process.cwd() + qlDir, "config/auth.json");
@@ -573,14 +579,14 @@ module.exports = {
 
     async sendNotify(title, content) {
         if (!this.config.NOTIFY) {
-            console.log("Ninja 通知已关闭\n" + title + "\n" + content + "\n" + "已跳过发送");
+            this.logger.info("Ninja 通知已关闭\n" + title + "\n" + content + "\n" + "已跳过发送");
             return;
         }
         exec(`${notifyFile} "${title}" "${content}"`, (error, stdout, stderr) => {
             if (error) {
-                console.log(stderr);
+                this.logger.info(stderr);
             } else {
-                console.log(stdout);
+                this.logger.info(stdout);
             }
         });
     }

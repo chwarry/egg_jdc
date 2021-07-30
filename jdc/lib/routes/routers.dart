@@ -2,7 +2,7 @@ import 'package:jdc/routes/404.dart';
 import 'package:jdc/routes/router_init.dart';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:jdc/screens/main/main_screen.dart';
+import 'package:jdc/screens/main_screen.dart';
 import 'package:jdc/screens/screen_router.dart';
 
 // ignore: avoid_classes_with_only_static_members

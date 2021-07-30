@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jdc/controllers/AppStateController.dart';
+import 'package:jdc/controllers/ScreenStateController.dart';
 import 'package:provider/provider.dart';
 
 class Store {
@@ -10,7 +11,14 @@ class Store {
     //多个Provider
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppStateController>(create: (_) => AppStateController()),
+        ChangeNotifierProvider<AppStateController>(
+          create: (_) => AppStateController(),
+          lazy: false,
+        ),
+        ChangeNotifierProvider<ScreenStateController>(
+          create: (_) => ScreenStateController(),
+          lazy: false,
+        ),
       ],
       child: child,
     );

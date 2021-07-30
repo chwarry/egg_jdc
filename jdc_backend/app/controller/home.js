@@ -4,8 +4,27 @@ const Controller = require("egg").Controller;
 
 class HomeController extends Controller {
     async index() {
-        let result = await this.app.getTotalBean(0);
-        this.ctx.response.success({
+        let { keys } = this.ctx.query;
+        if (keys == this.app.keys[0]) {
+            this.ctx.response.success({
+                message: "jac backend is ready"
+            });
+        } else {
+            this.ctx.response.failure({
+                code: -1,
+                message: "访问失败, 无权访问该节点!"
+            });
+        }
+        // let result = await this.app.getTotalBean(0);
+        // this.ctx.response.success({
+        //     data: result
+        // });
+    }
+    // 节点列表
+    async getNodeList() {
+        console.log(this.app.keys);
+        let result = await this.app.getNodeList();
+        return this.ctx.response.success({
             data: result
         });
     }
@@ -13,6 +32,20 @@ class HomeController extends Controller {
     async getBeanChange() {
         try {
             let result = await this.app.getTotalBean(this.ctx.query.type);
+            this.ctx.response.success({
+                data: result
+            });
+        } catch (error) {
+            this.ctx.response.failure({
+                code: -1,
+                message: "接口限制, 访问失败!"
+            });
+        }
+    }
+
+    async getNodeInfo() {
+        try {
+            let result = await this.app.getPoolInfo();
             this.ctx.response.success({
                 data: result
             });
@@ -136,10 +169,18 @@ class HomeController extends Controller {
     }
 
     async getAllUser() {
-        let result = await this.app.getAllUser();
-        this.ctx.response.success({
-            data: result
-        });
+        let { keys } = this.ctx.query;
+        if (keys == this.app.keys[0]) {
+            let result = await this.app.getAllUser();
+            this.ctx.response.success({
+                data: result
+            });
+        } else {
+            this.ctx.response.failure({
+                code: -1,
+                message: "访问失败, 无权访问该节点!"
+            });
+        }
     }
 }
 

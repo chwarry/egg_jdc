@@ -33,9 +33,7 @@ class ExceptionHandle {
           return NetError(parse_error, '数据解析错误！');
         }
         return NetError(net_error, '网络异常，请检查你的网络！');
-      } else if (error.type == DioErrorType.connectTimeout ||
-          error.type == DioErrorType.sendTimeout ||
-          error.type == DioErrorType.receiveTimeout) {
+      } else if (error.type == DioErrorType.connectTimeout || error.type == DioErrorType.sendTimeout || error.type == DioErrorType.receiveTimeout) {
         return NetError(timeout_error, '连接超时！');
       } else if (error.type == DioErrorType.cancel) {
         return NetError(cancel_error, '取消请求');

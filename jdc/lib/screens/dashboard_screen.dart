@@ -1,12 +1,12 @@
 import 'package:jdc/responsive.dart';
-import 'package:jdc/screens/dashboard/components/my_fields.dart';
+import 'package:jdc/components/my_fields.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants.dart';
-import 'components/header.dart';
+import 'package:jdc/constants.dart';
+import 'package:jdc/components/header.dart';
 
-import 'components/recent_files.dart';
-import 'components/storage_details.dart';
+import 'package:jdc/components/recent_files.dart';
+import 'package:jdc/components/storage_details.dart';
 
 class DashboardScreen extends StatelessWidget {
   @override

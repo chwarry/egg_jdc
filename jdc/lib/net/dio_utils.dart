@@ -34,7 +34,6 @@ typedef NetSuccessCallback<T> = Function(T data);
 typedef NetSuccessListCallback<T> = Function(List<T> data);
 typedef NetErrorCallback = Function(int code, String msg);
 
-/// @weilu https://github.com/simplezhli
 class DioUtils {
   static final DioUtils _singleton = DioUtils._();
 
@@ -53,7 +52,7 @@ class DioUtils {
       sendTimeout: _sendTimeout,
 
       /// dio默认json解析，这里指定返回UTF8字符串，自己处理解析。（可也以自定义Transformer实现）
-      responseType: ResponseType.plain,
+      // responseType: ResponseType.plain,
       validateStatus: (_) {
         // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
         return true;
@@ -135,7 +134,7 @@ class DioUtils {
       options: options,
       cancelToken: cancelToken,
     ).then((result) {
-      if (result["code"] == 200) {
+      if (result["code"] == 0) {
         if (onSuccess != null) {
           onSuccess(result["data"]);
         }
@@ -169,7 +168,7 @@ class DioUtils {
       options: options,
       cancelToken: cancelToken,
     )).asBroadcastStream().listen((result) {
-      if (result["code"] == 200) {
+      if (result["code"] == 0) {
         if (onSuccess != null) {
           onSuccess(result["data"]);
         }

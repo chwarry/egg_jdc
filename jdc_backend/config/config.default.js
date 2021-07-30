@@ -32,11 +32,11 @@ module.exports = (appInfo) => {
         okl_token: "",
         cookies: "",
         currentCookie: "",
-        QL_URL: "https://jd.lppfk.top", // 青龙地址
+        QL_URL: "xxxx", // 青龙访问地址 http://ip:port 或者直接域名
         QL_DIR: "/ql",
-        ALLOW_NUM: 100,
-        ALLOW_ADD: 1,
-        NOTIFY: 0,
+        ALLOW_NUM: 100, //节点最大提供cookie位置
+        ALLOW_ADD: 1, //是否允许添加cookie
+        NOTIFY: 0, //添加成功后,是否允许通知
         UA: ""
     };
 
