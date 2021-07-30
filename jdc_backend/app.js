@@ -15,15 +15,6 @@ class AppBootHook {
         this.app.nowdb.loadDatabase((err) => {
             if (err) throw err;
         });
-        // this.app.transporter = nodemailer.createTransport({
-        //     host: "smtp.qq.com",
-        //     secureConnection: true,
-        //     port: 465,
-        //     auth: {
-        //         user: this.app.config.email,
-        //         pass: "mqfangbpkpnzcbdj"
-        //     }
-        // });
     }
 
     async beforeClose() {}

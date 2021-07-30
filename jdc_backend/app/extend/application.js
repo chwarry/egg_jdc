@@ -504,10 +504,10 @@ module.exports = {
                 return a + b;
             }, 0);
             // 查询数据有没有数据
-            let result = await this.findDoc({ _id: env._id });
+            let result = await this.findDoc({ id: env._id });
 
             let doc;
-            if (result.length > 0) {
+            if (result) {
                 let index = result.todayBeanNumber.findIndex((v) => {
                     return v.date == dayjs().format("YYYY-MM-DD");
                 });
@@ -515,7 +515,7 @@ module.exports = {
                     date: dayjs().format("YYYY-MM-DD"),
                     tadayBeanNumber
                 };
-                doc = await this.updateDoc(result);
+                doc = await this.updateDoc({ _id: result._id }, result);
             } else {
                 let itr = {
                     id: env._id,
@@ -538,7 +538,7 @@ module.exports = {
 
     async findDoc(partern) {
         return new Promise((resolve) => {
-            this.nowdb.find(partern, (err, docs) => {
+            this.nowdb.findOne(partern, (err, docs) => {
                 if (err) {
                     this.logger.error(err);
                 } else {
@@ -559,9 +559,9 @@ module.exports = {
             });
         });
     },
-    async updateDoc(doc) {
+    async updateDoc(partern, doc) {
         return new Promise((resolve) => {
-            this.nowdb.update({ _id: doc._id }, doc, { returnUpdatedDocs: true }, (err, num, docs) => {
+            this.nowdb.update(partern, doc, { returnUpdatedDocs: true }, (err, num, docs) => {
                 if (err) {
                     this.logger.error(err);
                 } else {

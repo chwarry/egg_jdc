@@ -1,4 +1,4 @@
-@url = http://127.0.0.1:7001
+@url = http://127.0.0.1:9998
 
 GET {{url}}/api/getAllUser HTTP/1.1
 
