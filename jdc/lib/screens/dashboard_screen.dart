@@ -1,5 +1,5 @@
 import 'package:jdc/responsive.dart';
-import 'package:jdc/components/my_fields.dart';
+import 'package:jdc/components/my_node_list.dart';
 import 'package:flutter/material.dart';
 
 import 'package:jdc/constants.dart';
@@ -25,21 +25,21 @@ class DashboardScreen extends StatelessWidget {
                   flex: 5,
                   child: Column(
                     children: [
-                      MyFiles(),
-                      SizedBox(height: defaultPadding),
-                      RecentFiles(),
-                      if (Responsive.isMobile(context)) SizedBox(height: defaultPadding),
-                      if (Responsive.isMobile(context)) StarageDetails(),
+                      MyNodeList(),
+                      // SizedBox(height: defaultPadding),
+                      // RecentFiles(),
+                      // if (Responsive.isMobile(context)) SizedBox(height: defaultPadding),
+                      // if (Responsive.isMobile(context)) StarageDetails(),
                     ],
                   ),
                 ),
-                if (!Responsive.isMobile(context)) SizedBox(width: defaultPadding),
-                // On Mobile means if the screen is less than 850 we dont want to show it
-                if (!Responsive.isMobile(context))
-                  Expanded(
-                    flex: 2,
-                    child: StarageDetails(),
-                  ),
+                // if (!Responsive.isMobile(context)) SizedBox(width: defaultPadding),
+                // // On Mobile means if the screen is less than 850 we dont want to show it
+                // if (!Responsive.isMobile(context))
+                //   Expanded(
+                //     flex: 2,
+                //     child: StarageDetails(),
+                //   ),
               ],
             )
           ],

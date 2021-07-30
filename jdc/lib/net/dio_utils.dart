@@ -1,22 +1,20 @@
 import 'dart:convert';
 
-import 'package:jdc/constants.dart';
-import 'package:jdc/util/log_utils.dart';
-import 'package:jdc/util/toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:jdc/constants.dart';
+import 'package:jdc/util/log_utils.dart';
 import 'error_handle.dart';
 
 /// 默认dio配置
-int _connectTimeout = 1000 * 50;
-int _receiveTimeout = 1000 * 50;
+int _connectTimeout = 15000;
+int _receiveTimeout = 15000;
 int _sendTimeout = 10000;
-String _baseUrl = "";
+String _baseUrl = '';
 List<Interceptor> _interceptors = [];
 
 /// 初始化Dio配置
-void setInitDio({
+void configDio({
   int? connectTimeout,
   int? receiveTimeout,
   int? sendTimeout,
@@ -34,31 +32,24 @@ typedef NetSuccessCallback<T> = Function(T data);
 typedef NetSuccessListCallback<T> = Function(List<T> data);
 typedef NetErrorCallback = Function(int code, String msg);
 
+/// @weilu https://github.com/simplezhli
 class DioUtils {
-  static final DioUtils _singleton = DioUtils._();
-
-  static DioUtils get instance => DioUtils();
-
   factory DioUtils() => _singleton;
 
-  static Dio? _dio;
-
-  Dio? get dio => _dio;
-
   DioUtils._() {
-    BaseOptions _options = BaseOptions(
+    final BaseOptions _options = BaseOptions(
       connectTimeout: _connectTimeout,
       receiveTimeout: _receiveTimeout,
       sendTimeout: _sendTimeout,
 
       /// dio默认json解析，这里指定返回UTF8字符串，自己处理解析。（可也以自定义Transformer实现）
-      // responseType: ResponseType.plain,
+      responseType: ResponseType.plain,
       validateStatus: (_) {
         // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
         return true;
       },
       baseUrl: _baseUrl,
-//  contentType: ContentType('application', 'x-www-form-urlencoded', charset: 'utf-8'),
+//      contentType: Headers.formUrlEncodedContentType, // 适用于post form表单提交
     );
     _dio = Dio(_options);
 
@@ -75,24 +66,32 @@ class DioUtils {
 
     /// 添加拦截器
     _interceptors.forEach((interceptor) {
-      _dio!.interceptors.add(interceptor);
+      _dio.interceptors.add(interceptor);
     });
   }
 
+  static final DioUtils _singleton = DioUtils._();
+
+  static DioUtils get instance => DioUtils();
+
+  static late Dio _dio;
+
+  Dio get dio => _dio;
+
   // 数据返回格式统一，统一处理异常
-  Future<dynamic> _request(
+  Future<dynamic> _request<T>(
     String method,
     String url, {
-    dynamic data,
+    Object? data,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     Options? options,
   }) async {
-    final Response<String> response = await _dio!.request<String>(
+    final Response<String> response = await _dio.request<String>(
       url,
       data: data,
       queryParameters: queryParameters,
-      options: _checkOptions(method, options!),
+      options: _checkOptions(method, options),
       cancelToken: cancelToken,
     );
     try {
@@ -111,7 +110,8 @@ class DioUtils {
     }
   }
 
-  Options _checkOptions(String method, Options options) {
+  Options _checkOptions(String method, Options? options) {
+    options ??= Options();
     options.method = method;
     return options;
   }
@@ -121,7 +121,7 @@ class DioUtils {
     String url, {
     NetSuccessCallback? onSuccess,
     NetErrorCallback? onError,
-    dynamic params,
+    Object? params,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     Options? options,
@@ -133,13 +133,10 @@ class DioUtils {
       queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken,
-    ).then((result) {
+    ).then<void>((result) {
       if (result["code"] == 0) {
-        if (onSuccess != null) {
-          onSuccess(result["data"]);
-        }
+        onSuccess?.call(result["result"]);
       } else {
-        Toast.show('接口请求异常： ${result["message"]}');
         _onError(result["code"], result["message"], onError);
       }
     }, onError: (dynamic e) {
@@ -155,7 +152,7 @@ class DioUtils {
     String url, {
     NetSuccessCallback? onSuccess,
     NetErrorCallback? onError,
-    dynamic params,
+    Object? params,
     Map<String, dynamic>? queryParameters,
     CancelToken? cancelToken,
     Options? options,
@@ -170,10 +167,9 @@ class DioUtils {
     )).asBroadcastStream().listen((result) {
       if (result["code"] == 0) {
         if (onSuccess != null) {
-          onSuccess(result["data"]);
+          onSuccess(result["result"]);
         }
       } else {
-        Toast.show('接口请求异常： ${result["message"]}');
         _onError(result["code"], result["message"], onError);
       }
     }, onError: (dynamic e) {
@@ -195,15 +191,12 @@ class DioUtils {
       msg = '未知异常';
     }
     Log.e('接口请求异常： code: $code, mag: $msg');
-    Toast.show('接口请求异常： code: $code, mag: $msg');
-    if (onError != null) {
-      onError(code, msg);
-    }
+    onError?.call(code, msg);
   }
 }
 
 Map<String, dynamic> parseData(String data) {
-  return json.decode(data);
+  return json.decode(data) as Map<String, dynamic>;
 }
 
 enum Method { get, post, put, patch, delete, head }
@@ -211,5 +204,5 @@ enum Method { get, post, put, patch, delete, head }
 /// 使用拓展枚举替代 switch判断取值
 /// https://zhuanlan.zhihu.com/p/98545689
 extension MethodExtension on Method {
-  String get value => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'][this.index];
+  String get value => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'][index];
 }

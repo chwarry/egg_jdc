@@ -5,7 +5,7 @@ import 'package:common_utils/common_utils.dart';
 
 /// 输出Log工具类
 class Log {
-  static const String tag = 'SHIZIJUHE-LOG';
+  static const String tag = 'JDC-LOG';
 
   static void init() {
     LogUtil.init(isDebug: !inProduction);

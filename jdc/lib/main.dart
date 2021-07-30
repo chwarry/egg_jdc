@@ -43,9 +43,9 @@ class MyApp extends StatelessWidget {
       interceptors.add(LoggingInterceptor());
     }
 
-    setInitDio(
+    configDio(
       //adb kill-server && adb server && adb shell
-      baseUrl: inProduction ? 'http://192.168.1.118:9998' : 'http://192.168.1.118:9998',
+      baseUrl: inProduction ? 'http://127.0.0.1:9998' : 'http://127.0.0.1:9998',
       interceptors: interceptors,
     );
   }

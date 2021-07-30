@@ -24,6 +24,15 @@ class HomeController extends Controller {
     async getNodeList() {
         console.log(this.app.keys);
         let result = await this.app.getNodeList();
+        for (const iterator of result) {
+            let nodeInfo = await this.ctx.curl(`${iterator.url}/api/getNodeInfo`, {
+                dataType: "json"
+            });
+            let index = result.findIndex((v) => {
+                return v.url == iterator.url;
+            });
+            result[index] = Object.assign(nodeInfo.data.result, result[index]);
+        }
         return this.ctx.response.success({
             data: result
         });

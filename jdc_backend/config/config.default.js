@@ -32,7 +32,7 @@ module.exports = (appInfo) => {
         okl_token: "",
         cookies: "",
         currentCookie: "",
-        QL_URL: "xxxx", // 青龙访问地址 http://ip:port 或者直接域名
+        QL_URL: "xxx", // 青龙访问地址 http://ip:port 或者直接域名
         QL_DIR: "/ql",
         ALLOW_NUM: 100, //节点最大提供cookie位置
         ALLOW_ADD: 1, //是否允许添加cookie

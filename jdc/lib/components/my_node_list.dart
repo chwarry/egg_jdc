@@ -1,14 +1,40 @@
 import 'package:jdc/models/MyFiles.dart';
+import 'package:jdc/models/node_list_model.dart';
+import 'package:jdc/net/dio_utils.dart';
+import 'package:jdc/net/http_api.dart';
 import 'package:jdc/responsive.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants.dart';
+import 'package:jdc/constants.dart';
 import 'file_info_card.dart';
 
-class MyFiles extends StatelessWidget {
-  const MyFiles({
+class MyNodeList extends StatefulWidget {
+  const MyNodeList({
     Key? key,
   }) : super(key: key);
+
+  @override
+  _MyNodeListState createState() => _MyNodeListState();
+}
+
+class _MyNodeListState extends State<MyNodeList> {
+  List<NodeListModel> nodeList = [];
+
+  @override
+  void initState() {
+    //获取节点数据
+    getData();
+    super.initState();
+  }
+
+  Future getData() async {
+    await DioUtils.instance.requestNetwork(Method.get, HttpApi.getNodeList, onSuccess: (resultList) {
+      print(resultList);
+      List.generate(resultList.length, (index) => nodeList.add(NodeListModel.fromJson(resultList[index])));
+    }, onError: (_, __) {
+      print("error");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,19 +45,8 @@ class MyFiles extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "My Files",
+              "节点列表",
               style: Theme.of(context).textTheme.subtitle1,
-            ),
-            ElevatedButton.icon(
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.symmetric(
-                  horizontal: defaultPadding * 1.5,
-                  vertical: defaultPadding / (Responsive.isMobile(context) ? 2 : 1),
-                ),
-              ),
-              onPressed: () {},
-              icon: Icon(Icons.add),
-              label: Text("Add New"),
             ),
           ],
         ),

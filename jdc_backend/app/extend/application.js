@@ -50,7 +50,8 @@ module.exports = {
         const allowCount = (this.config.ALLOW_NUM || 40) - count;
         return {
             marginCount: allowCount >= 0 ? allowCount : 0,
-            allowAdd: Boolean(this.config.ALLOW_ADD) || true
+            allowAdd: Boolean(this.config.ALLOW_ADD) || true,
+            allCount: this.config.ALLOW_NUM
         };
     },
 
