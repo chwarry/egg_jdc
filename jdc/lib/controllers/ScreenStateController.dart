@@ -8,4 +8,12 @@ class ScreenStateController extends ChangeNotifier {
     _screentIndex = index;
     notifyListeners();
   }
+
+  String _qrCode = "";
+  String get qrCode => _qrCode;
+
+  void setQrcode(String qrcode) {
+    _qrCode = qrcode;
+    notifyListeners();
+  }
 }

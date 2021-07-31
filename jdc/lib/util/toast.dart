@@ -1,12 +1,29 @@
-import 'package:oktoast/oktoast.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 /// Toast工具类
 class Toast {
-  static void show(String msg, {int duration = 2000}) {
-    showToast(msg, duration: Duration(milliseconds: duration), dismissOtherToast: true);
+  static void show(String msg, {int duration = 2}) {
+    EasyLoading.showToast(msg, duration: Duration(seconds: duration));
   }
 
   static void cancelToast() {
-    dismissAllToast();
+    EasyLoading.dismiss();
+  }
+
+  static initLoadingToast() {
+    EasyLoading.instance
+      ..displayDuration = const Duration(milliseconds: 2000)
+      ..indicatorType = EasyLoadingIndicatorType.chasingDots
+      ..loadingStyle = EasyLoadingStyle.dark
+      ..indicatorSize = 100.0
+      ..radius = 10.0
+      ..progressColor = Colors.yellow
+      ..backgroundColor = Colors.green
+      ..indicatorColor = Colors.yellow
+      ..textColor = Colors.yellow
+      ..maskColor = Colors.blue.withOpacity(0.5)
+      ..userInteractions = true
+      ..dismissOnTap = false;
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
-import 'chart.dart';
 import 'storage_info_card.dart';
 
 class StarageDetails extends StatelessWidget {
@@ -21,37 +20,22 @@ class StarageDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Storage Details",
+            "公告内容",
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
             ),
           ),
           SizedBox(height: defaultPadding),
-          Chart(),
-          StorageInfoCard(
-            svgSrc: "assets/icons/Documents.svg",
-            title: "Documents Files",
-            amountOfFiles: "1.3GB",
-            numOfFiles: 1328,
+          Text(
+            "本项目开源,如果收费,请删除",
+            style: TextStyle(color: Colors.redAccent),
           ),
+          SizedBox(height: defaultPadding),
           StorageInfoCard(
-            svgSrc: "assets/icons/media.svg",
-            title: "Media Files",
-            amountOfFiles: "15.3GB",
-            numOfFiles: 1328,
-          ),
-          StorageInfoCard(
-            svgSrc: "assets/icons/folder.svg",
-            title: "Other Files",
-            amountOfFiles: "1.3GB",
-            numOfFiles: 1328,
-          ),
-          StorageInfoCard(
-            svgSrc: "assets/icons/unknown.svg",
-            title: "Unknown",
-            amountOfFiles: "1.3GB",
-            numOfFiles: 140,
+            svgSrc: "assets/icons/doc_file.svg",
+            title: "github地址",
+            url: "https://github.com/xiaojia21190/egg_jdc",
           ),
         ],
       ),

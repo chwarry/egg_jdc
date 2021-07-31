@@ -2,6 +2,7 @@
 
 const Controller = require("egg").Controller;
 
+const { v4: uuidv4 } = require("uuid");
 class HomeController extends Controller {
     async index() {
         let { keys } = this.ctx.query;
@@ -15,7 +16,7 @@ class HomeController extends Controller {
                 message: "访问失败, 无权访问该节点!"
             });
         }
-        // let result = await this.app.getTotalBean(0);
+        // let result = await this.app.getTotalBean();
         // this.ctx.response.success({
         //     data: result
         // });
@@ -24,12 +25,16 @@ class HomeController extends Controller {
     async getNodeList() {
         console.log(this.app.keys);
         let result = await this.app.getNodeList();
+        result.forEach((i, index) => {
+            result[index]["_id"] = uuidv4();
+        });
         for (const iterator of result) {
             let nodeInfo = await this.ctx.curl(`${iterator.url}/api/getNodeInfo`, {
                 dataType: "json"
             });
+
             let index = result.findIndex((v) => {
-                return v.url == iterator.url;
+                return v._id == iterator._id;
             });
             result[index] = Object.assign(nodeInfo.data.result, result[index]);
         }

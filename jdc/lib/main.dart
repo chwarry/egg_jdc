@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:jdc/constants.dart';
 import 'package:jdc/routes/404.dart';
 import 'package:jdc/routes/application.dart';
@@ -6,12 +7,13 @@ import 'package:jdc/routes/routers.dart';
 import 'package:jdc/util/handle_error_utils.dart';
 import 'package:jdc/util/log_utils.dart';
 import 'package:jdc/util/store.dart';
-import 'package:oktoast/oktoast.dart';
+// import 'package:oktoast/oktoast.dart';
 import 'package:dio/dio.dart';
 import 'package:fluro/fluro.dart';
 import 'package:jdc/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:jdc/util/toast.dart';
 import 'package:sp_util/sp_util.dart';
 
 import 'net/dio_utils.dart';
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
   MyApp() {
     Log.init();
     initDio();
+    Toast.initLoadingToast();
 
     final FluroRouter router = FluroRouter();
     Routes.configureRoutes(router);
@@ -52,37 +55,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OKToast(
-        child: MaterialApp(
-          title: '京东助手',
-          theme: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: bgColor,
-            textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(bodyColor: Colors.white),
-            canvasColor: secondaryColor,
-          ),
-          home: MainScreen(),
-          onGenerateRoute: Application.router!.generator,
-          builder: (context, child) {
-            /// 保证文字大小不受手机系统设置影响 https://www.kikt.top/posts/flutter/layout/dynamic-text/
-            return MediaQuery(
-              data: MediaQuery.of(context)
-                  .copyWith(textScaleFactor: 1.0), // 或者 MediaQueryData.fromWindow(WidgetsBinding.instance.window).copyWith(textScaleFactor: 1.0),
-              child: child!,
-            );
-          },
+    return MaterialApp(
+      title: '京东助手',
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: bgColor,
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme).apply(bodyColor: Colors.white),
+        canvasColor: secondaryColor,
+      ),
+      home: MainScreen(),
+      onGenerateRoute: Application.router!.generator,
+      builder: EasyLoading.init(),
 
-          /// 因为使用了fluro，这里设置主要针对Web
-          onUnknownRoute: (_) {
-            return MaterialPageRoute(
-              builder: (BuildContext context) => PageNotFound(),
-            );
-          },
-        ),
-
-        /// Toast 配置
-        backgroundColor: Colors.black54,
-        textPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-        radius: 20.0,
-        position: ToastPosition.bottom);
+      /// 因为使用了fluro，这里设置主要针对Web
+      onUnknownRoute: (_) {
+        return MaterialPageRoute(
+          builder: (BuildContext context) => PageNotFound(),
+        );
+      },
+    );
   }
 }

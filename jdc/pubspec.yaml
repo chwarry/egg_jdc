@@ -23,7 +23,7 @@ dependencies:
   sp_util: ^2.0.3
   common_utils: ^2.0.2
   # Toast插件 https://github.com/OpenFlutter/flutter_oktoast
-  oktoast: ^3.0.0
+  # oktoast: ^3.0.0
   # 网络库 https://github.com/flutterchina/dio
   dio: ^4.0.0
   # 路由框架 https://github.com/theyakka/fluro
@@ -41,6 +41,8 @@ dependencies:
   # 图片缓存 https://github.com/renefloor/flutter_cached_network_image
   cached_network_image: ^3.0.0
   qr_flutter: ^4.0.0
+  flutter_easyloading: ^3.0.0
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   build_runner: ^2.0.1

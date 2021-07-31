@@ -82,5 +82,36 @@ module.exports = {
      */
     random_time_ua() {
         return `jdapp;android;10.0.5;11;${Date.now()}-${Date.now()};network/wifi;model/M2102K1C;osVer/30;appBuild/88681;partner/lc001;eufv/1;jdSupportDarkMode/0;Mozilla/5.0 (Linux; Android 11; M2102K1C Build/RKQ1.201112.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045534 Mobile Safari/537.36`;
+    },
+
+    createRandomString(min, max) {
+        const num = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        const english = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+        const ENGLISH = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+        const special = ["-", "_", "#"];
+        const config = num.concat(english).concat(ENGLISH).concat(special);
+
+        const arr = [];
+        arr.push(getOne(num));
+        arr.push(getOne(english));
+        arr.push(getOne(ENGLISH));
+        arr.push(getOne(special));
+
+        const len = min + Math.floor(Math.random() * (max - min + 1));
+
+        for (let i = 4; i < len; i++) {
+            arr.push(config[Math.floor(Math.random() * config.length)]);
+        }
+
+        const newArr = [];
+        for (let j = 0; j < len; j++) {
+            newArr.push(arr.splice(Math.random() * arr.length, 1)[0]);
+        }
+
+        function getOne(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        return newArr.join("");
     }
 };

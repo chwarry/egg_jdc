@@ -1,6 +1,6 @@
 "use strict";
 
-const { readFile } = require("fs").promises;
+const { readFile, writeFile } = require("fs").promises;
 const path = require("path");
 const QRCode = require("qrcode");
 const dayjs = require("dayjs");
@@ -14,8 +14,6 @@ dayjs.tz.setDefault("Asia/Shanghai");
 
 const { random_time_ua } = require("./helper");
 
-const { v4: uuidv4 } = require("uuid");
-
 module.exports = {
     async getNodeList() {
         let filePath = path.join(process.cwd(), "nodelist.json");
@@ -24,10 +22,37 @@ module.exports = {
     },
 
     async getToken() {
-        const qlDir = this.config.QL_DIR || "/ql";
-        const authFile = path.join(process.cwd() + qlDir, "config/auth.json");
+        const authFile = path.join(process.cwd(), "token.json");
         const authConfig = JSON.parse(await readFile(authFile));
-        return authConfig.token;
+        const token = authConfig.token;
+        const createDate = authConfig.createDate;
+        // 判断 token 是否过期
+        let flag = true;
+        if (token && createDate) {
+            flag = dayjs(createDate).add(3, "day").isBefore(dayjs());
+            if (!flag) {
+                return token;
+            }
+        }
+
+        if (flag) {
+            const body = await this.curl(`${this.config.QL_URL}/api/login?t=${Date.now()}`, {
+                method: "POST",
+                dataType: "json",
+                data: {
+                    username: this.config.USERNAME,
+                    password: this.config.PASSWORD
+                }
+            });
+            await writeFile(
+                authFile,
+                JSON.stringify({
+                    token: body.data.token,
+                    createDate: dayjs()
+                })
+            );
+            return body.data.token;
+        }
     },
 
     async envHelper() {
