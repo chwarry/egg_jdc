@@ -16,4 +16,12 @@ class ScreenStateController extends ChangeNotifier {
     _qrCode = qrcode;
     notifyListeners();
   }
+
+  String _eid = "";
+  String get eid => _eid;
+
+  void setEid(String str) {
+    _eid = str;
+    notifyListeners();
+  }
 }

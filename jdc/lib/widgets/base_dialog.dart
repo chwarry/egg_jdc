@@ -5,9 +5,9 @@ import 'package:jdc/routes/fluro_navigator.dart';
 
 /// 自定义dialog的模板
 class BaseDialog extends StatelessWidget {
-  const BaseDialog({Key? key, required this.title, required this.onPressed, this.hiddenTitle = false, required this.child}) : super(key: key);
+  const BaseDialog({Key? key, this.title, required this.onPressed, this.hiddenTitle = false, required this.child}) : super(key: key);
 
-  final String title;
+  final String? title;
   final VoidCallback onPressed;
   final Widget child;
   final bool hiddenTitle;
@@ -19,7 +19,7 @@ class BaseDialog extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Text(
-          hiddenTitle ? '' : title,
+          title ?? "",
           style: TextStyle(fontSize: 18),
         ),
       ),
@@ -51,9 +51,12 @@ class BaseDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Gaps.vGap24,
-          dialogTitle,
-          Flexible(child: child),
-          Gaps.vGap8,
+          hiddenTitle ? dialogTitle : Container(),
+          Flexible(
+            child: child,
+            flex: 5,
+          ),
+          Gaps.vGap24,
           bottomButton,
         ],
       ),

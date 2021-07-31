@@ -43,6 +43,8 @@ dependencies:
   qr_flutter: ^4.0.0
   flutter_easyloading: ^3.0.0
   url_launcher: ^6.0.9
+  permission_handler: ^8.1.4+2
+  image_gallery_saver: ^1.6.9
 
 dev_dependencies:
   build_runner: ^2.0.1

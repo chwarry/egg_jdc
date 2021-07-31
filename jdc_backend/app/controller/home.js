@@ -92,7 +92,8 @@ class HomeController extends Controller {
 
     async check() {
         try {
-            const result = await this.app.checkQRLogin();
+            let { token, okl_token, cookies } = ctx.request.body;
+            const result = await this.app.checkQRLogin(token, okl_token, cookies);
             this.ctx.response.success({
                 data: result
             });

@@ -28,21 +28,17 @@ module.exports = (appInfo) => {
 
     // add your user config here
     const userConfig = {
-        token: "",
-        okl_token: "",
-        cookies: "",
         currentCookie: "",
-        QL_URL: "xxx", // 青龙访问地址 http://ip:port 或者直接域名
+        QL_URL: "", // 青龙访问地址 http://ip:port 或者直接域名
         QL_DIR: "/ql",
         ALLOW_NUM: 100, //节点最大提供cookie位置
         ALLOW_ADD: 1, //是否允许添加cookie
         NOTIFY: 0, //添加成功后,是否允许通知
         UA: "",
-        USERNAME: "xxx", // ql 登陆账号
-        PASSWORD: "xxx", // ql 登陆密码
+        USERNAME: "", // ql 登陆账号
+        PASSWORD: "", // ql 登陆密码
         QL_PIRESIN: 60 * 60 * 24 * 3 //ql token过期时间
     };
-
     return {
         ...config,
         ...userConfig

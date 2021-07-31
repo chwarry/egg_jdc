@@ -16,6 +16,7 @@ class Toast {
       ..displayDuration = const Duration(milliseconds: 2000)
       ..indicatorType = EasyLoadingIndicatorType.chasingDots
       ..loadingStyle = EasyLoadingStyle.dark
+      ..maskType = EasyLoadingMaskType.black
       ..indicatorSize = 100.0
       ..radius = 10.0
       ..progressColor = Colors.yellow

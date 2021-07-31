@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jdc/constants.dart';
+import 'package:jdc/res/gaps.dart';
 
 class MyButton extends StatelessWidget {
   const MyButton({
@@ -18,19 +20,18 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: onPressed,
-      style: ButtonStyle(shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)))),
-      child: Container(
-        height: this.height,
-        width: this.width,
-        alignment: Alignment.center,
+    return SizedBox(
+      height: height,
+      child: ElevatedButton(
         child: Text(
-          text,
-          style: TextStyle(
-            fontSize: this.fontSize,
-          ),
+          '点击扫码登陆',
+          style: TextStyle(fontSize: Dimens.font_sp18),
         ),
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
+            backgroundColor: MaterialStateProperty.all(secondaryColor),
+            textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(color: primaryColor, fontSize: fontSize))),
+        onPressed: onPressed,
       ),
     );
   }

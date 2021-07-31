@@ -37,13 +37,6 @@ class _SideMenuState extends State<SideMenu> {
             },
           ),
           DrawerListTile(
-            title: "扫码",
-            svgSrc: "assets/icons/menu_store.svg",
-            press: () {
-              screenStateController!.setScreenIndex(1);
-            },
-          ),
-          DrawerListTile(
             title: "任务列表",
             svgSrc: "assets/icons/menu_task.svg",
             press: () {

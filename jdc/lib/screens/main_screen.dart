@@ -1,9 +1,11 @@
 import 'package:jdc/controllers/AppStateController.dart';
 import 'package:jdc/controllers/ScreenStateController.dart';
 import 'package:jdc/responsive.dart';
+import 'package:jdc/screens/bean_page.dart';
 import 'package:jdc/screens/dashboard_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:jdc/screens/saoma_page.dart';
+import 'package:jdc/screens/setting_page.dart';
+import 'package:jdc/screens/task_page.dart';
 import 'package:jdc/util/store.dart';
 import 'package:provider/provider.dart';
 
@@ -52,13 +54,11 @@ class _MainScreenState extends State<MainScreen> {
               child: Selector<ScreenStateController, int>(
                   builder: (_, index, __) {
                     if (index == 1) {
-                      return SaoMaPage();
+                      return TaskPage();
                     } else if (index == 2) {
-                      return SaoMaPage();
+                      return BeanPage();
                     } else if (index == 3) {
-                      return SaoMaPage();
-                    } else if (index == 4) {
-                      return SaoMaPage();
+                      return SettingPage();
                     }
                     return DashboardScreen();
                   },
