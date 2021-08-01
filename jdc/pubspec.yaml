@@ -45,6 +45,9 @@ dependencies:
   url_launcher: ^6.0.9
   permission_handler: ^8.1.4+2
   image_gallery_saver: ^1.6.9
+  sprintf: ^6.0.0
+  # 去除网页URL中的“#”(hash) https://flutter.cn/docs/development/ui/navigation/url-strategies
+  url_strategy: 0.2.0
 
 dev_dependencies:
   build_runner: ^2.0.1

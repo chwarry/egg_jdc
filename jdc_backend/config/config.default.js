@@ -26,6 +26,19 @@ module.exports = (appInfo) => {
         }
     };
 
+    // 取消安全证书验证
+    config.security = {
+        csrf: {
+            enable: false
+        },
+        domainWhiteList: ["127.0.0.1"] // 白名单
+    };
+
+    config.cors = {
+        origin: "*", // 跨任何域
+        allowMethods: "GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS" // 被允许的请求方式
+    };
+
     // add your user config here
     const userConfig = {
         currentCookie: "",

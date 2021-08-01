@@ -770,6 +770,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.3"
+  sprintf:
+    dependency: "direct main"
+    description:
+      name: sprintf
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "6.0.0"
   sqflite:
     dependency: transitive
     description:
@@ -889,6 +896,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.1"
+  url_strategy:
+    dependency: "direct main"
+    description:
+      name: url_strategy
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.0"
   uuid:
     dependency: transitive
     description:

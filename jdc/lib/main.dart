@@ -7,7 +7,6 @@ import 'package:jdc/routes/routers.dart';
 import 'package:jdc/util/handle_error_utils.dart';
 import 'package:jdc/util/log_utils.dart';
 import 'package:jdc/util/store.dart';
-// import 'package:oktoast/oktoast.dart';
 import 'package:dio/dio.dart';
 import 'package:fluro/fluro.dart';
 import 'package:jdc/screens/main_screen.dart';
@@ -15,12 +14,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:jdc/util/toast.dart';
 import 'package:sp_util/sp_util.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 import 'net/dio_utils.dart';
 import 'net/intercept.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  setPathUrlStrategy();
+
   await SpUtil.getInstance();
 
   handleError(runApp(Store.init(MyApp())));
