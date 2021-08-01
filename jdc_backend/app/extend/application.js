@@ -22,37 +22,10 @@ module.exports = {
     },
 
     async getToken() {
-        const authFile = path.join(process.cwd(), "token.json");
+        const qlDir = this.config.QL_DIR || "/ql";
+        const authFile = path.join(process.cwd() + qlDir, "config/auth.json");
         const authConfig = JSON.parse(await readFile(authFile));
-        const token = authConfig.token;
-        const createDate = authConfig.createDate;
-        // 判断 token 是否过期
-        let flag = true;
-        if (token && createDate) {
-            flag = dayjs(createDate).add(5, "hour").isBefore(dayjs());
-            if (!flag) {
-                return token;
-            }
-        }
-
-        if (flag) {
-            const body = await this.curl(`${this.config.QL_URL}/api/login?t=${Date.now()}`, {
-                method: "POST",
-                dataType: "json",
-                data: {
-                    username: this.config.USERNAME,
-                    password: this.config.PASSWORD
-                }
-            });
-            await writeFile(
-                authFile,
-                JSON.stringify({
-                    token: body.data.token,
-                    createDate: dayjs()
-                })
-            );
-            return body.data.token;
-        }
+        return authConfig.token;
     },
 
     async envHelper() {

@@ -34,10 +34,7 @@ module.exports = (appInfo) => {
         ALLOW_NUM: 100, //节点最大提供cookie位置
         ALLOW_ADD: 1, //是否允许添加cookie
         NOTIFY: 0, //添加成功后,是否允许通知
-        UA: "",
-        USERNAME: "", // ql 登陆账号
-        PASSWORD: "", // ql 登陆密码
-        QL_PIRESIN: 60 * 60 * 24 * 3 //ql token过期时间
+        UA: ""
     };
     return {
         ...config,
