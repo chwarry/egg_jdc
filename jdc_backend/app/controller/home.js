@@ -5,17 +5,9 @@ const Controller = require("egg").Controller;
 const { v4: uuidv4 } = require("uuid");
 class HomeController extends Controller {
     async index() {
-        let { keys } = this.ctx.query;
-        if (keys == this.app.keys[0]) {
-            this.ctx.response.success({
-                message: "jac backend is ready"
-            });
-        } else {
-            this.ctx.response.failure({
-                code: -1,
-                message: "访问失败, 无权访问该节点!"
-            });
-        }
+        this.ctx.response.success({
+            message: "egg_jdc backend is ready"
+        });
         // let result = await this.app.getTotalBean();
         // this.ctx.response.success({
         //     data: result
@@ -32,14 +24,27 @@ class HomeController extends Controller {
             let nodeInfo = await this.ctx.curl(`${iterator.url}/api/getNodeInfo`, {
                 dataType: "json"
             });
-
-            let index = result.findIndex((v) => {
-                return v._id == iterator._id;
-            });
-            result[index] = Object.assign(nodeInfo.data.result, result[index]);
+            if (nodeInfo.code === 0) {
+                let index = result.findIndex((v) => {
+                    return v._id == iterator._id;
+                });
+                result[index] = Object.assign(nodeInfo.data.result, result[index]);
+                // 设备在线
+                result[index]["activite"] = true;
+            } else {
+                result[index]["activite"] = false;
+            }
         }
-        return this.ctx.response.success({
+        this.ctx.response.success({
             data: result
+        });
+    }
+
+    async getActivity() {
+        const activityFile = path.join(process.cwd(), "activity.json");
+        const ativityConfig = JSON.parse(await readFile(activityFile));
+        this.ctx.response.success({
+            data: ativityConfig
         });
     }
 

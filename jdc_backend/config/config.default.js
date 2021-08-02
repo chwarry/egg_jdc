@@ -47,7 +47,8 @@ module.exports = (appInfo) => {
         ALLOW_NUM: 100, //节点最大提供cookie位置
         ALLOW_ADD: 1, //是否允许添加cookie
         NOTIFY: 0, //添加成功后,是否允许通知
-        UA: ""
+        UA: "",
+        SEND_NOTIFY: "" // 推送二维码地址 推荐 pushplus+
     };
     return {
         ...config,

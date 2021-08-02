@@ -17,4 +17,5 @@ module.exports = (app) => {
     router.get("/api/getBeanChange", controller.home.getBeanChange);
     router.get("/api/getNodeInfo", controller.home.getNodeInfo);
     router.get("/api/getNodeList", controller.home.getNodeList);
+    router.get("/api/getActivity", controller.home.getActivity);
 };
