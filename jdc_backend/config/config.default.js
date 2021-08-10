@@ -2,6 +2,7 @@
 
 "use strict";
 
+const path = require("path");
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -18,11 +19,17 @@ module.exports = (appInfo) => {
     // add your middleware config here
     config.middleware = [];
 
+    //静态文件修改
+    config.static = {
+        prefix: "/jdc",
+        dir: path.join(appInfo.baseDir, "app/jdc")
+    };
+
+    // 配置端口
     config.cluster = {
         listen: {
             port: 9998,
-            hostname: "127.0.0.1" // 不建议设置 hostname 为 '0.0.0.0'，它将允许来自外部网络和来源的连接，请在知晓风险的情况下使用
-            // path: '/var/run/egg.sock',
+            hostname: "127.0.0.1"
         }
     };
 
@@ -33,7 +40,7 @@ module.exports = (appInfo) => {
         },
         domainWhiteList: ["127.0.0.1"] // 白名单
     };
-
+    //cors 配置
     config.cors = {
         origin: "*", // 跨任何域
         allowMethods: "GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS" // 被允许的请求方式
@@ -41,14 +48,12 @@ module.exports = (appInfo) => {
 
     // add your user config here
     const userConfig = {
-        currentCookie: "",
-        QL_URL: "", // 青龙访问地址 http://ip:port 或者直接域名
-        QL_DIR: "/ql",
-        ALLOW_NUM: 100, //节点最大提供cookie位置
+        QL_URL: "", // 当前节点对应青龙访问地址 http://ip:port 或者直接域名
+        QL_DIR: "/ql", // 当前节点对应青龙配置文件地址 -- /ql/config/auth.json
+        ALLOW_NUM: 100, //节点最大提供cookie数量
         ALLOW_ADD: 1, //是否允许添加cookie
         NOTIFY: 0, //添加成功后,是否允许通知
-        UA: "",
-        SEND_NOTIFY: "" // 推送二维码地址 推荐 pushplus+
+        UA: "" //自定义扫码cookie ua
     };
     return {
         ...config,

@@ -18,4 +18,5 @@ module.exports = (app) => {
     router.get("/api/getNodeInfo", controller.home.getNodeInfo);
     router.get("/api/getNodeList", controller.home.getNodeList);
     router.get("/api/getActivity", controller.home.getActivity);
+    router.get("/api/getGonggao", controller.home.getGonggao);
 };

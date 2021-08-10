@@ -3,15 +3,13 @@
 const Controller = require("egg").Controller;
 
 const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+const { readFile } = require("fs").promises;
 class HomeController extends Controller {
     async index() {
         this.ctx.response.success({
             message: "egg_jdc backend is ready"
         });
-        // let result = await this.app.getTotalBean();
-        // this.ctx.response.success({
-        //     data: result
-        // });
     }
     // 节点列表
     async getNodeList() {
@@ -24,10 +22,10 @@ class HomeController extends Controller {
             let nodeInfo = await this.ctx.curl(`${iterator.url}/api/getNodeInfo`, {
                 dataType: "json"
             });
+            let index = result.findIndex((v) => {
+                return v._id == iterator._id;
+            });
             if (nodeInfo.code === 0) {
-                let index = result.findIndex((v) => {
-                    return v._id == iterator._id;
-                });
                 result[index] = Object.assign(nodeInfo.data.result, result[index]);
                 // 设备在线
                 result[index]["activite"] = true;
@@ -42,6 +40,14 @@ class HomeController extends Controller {
 
     async getActivity() {
         const activityFile = path.join(process.cwd(), "activity.json");
+        const ativityConfig = JSON.parse(await readFile(activityFile));
+        this.ctx.response.success({
+            data: ativityConfig
+        });
+    }
+
+    async getGonggao() {
+        const activityFile = path.join(process.cwd(), "gongao.json");
         const ativityConfig = JSON.parse(await readFile(activityFile));
         this.ctx.response.success({
             data: ativityConfig

@@ -4,3 +4,9 @@ GET {{url}}/api/qrcode HTTP/1.1
 
 ###
 GET {{url}}/api/getNodeList HTTP/1.1
+
+###
+GET {{url}}/api/getActivity HTTP/1.1
+
+###
+GET {{url}}/api/getGonggao HTTP/1.1
