@@ -1,11 +1,16 @@
 {
     "scripts": {
-        "dev": "vite",
-        "build": "vite build",
+        "dev": "vite --mode development",
+        "build": "vite build --mode production",
         "serve": "vite preview"
     },
     "dependencies": {
-        "vue": "^3.1.4"
+        "axios": "^0.21.1",
+        "pinia": "^2.0.0-beta.3",
+        "sass": "^1.37.5",
+        "sass-loader": "^12.1.0",
+        "vue": "^3.1.4",
+        "vue-router": "^4.0.10"
     },
     "devDependencies": {
         "@vitejs/plugin-vue": "latest",
