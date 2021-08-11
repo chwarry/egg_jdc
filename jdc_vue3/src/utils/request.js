@@ -3,7 +3,6 @@ import axios from 'axios';
 const http = axios.create({
     baseURL: process.env.VUE_APP_CURENV !== 'development' ? 'http://127.0.0.1:9998/' : '',
     timeout: 1000 * 180,
-    withCredentials: true,
 });
 
 /**
@@ -11,7 +10,6 @@ const http = axios.create({
  */
 http.interceptors.request.use(
     (config) => {
-        console.log(config);
         return config;
     },
     (error) => {
@@ -24,7 +22,9 @@ http.interceptors.request.use(
  */
 http.interceptors.response.use(
     (response) => {
-        return response;
+        if (response.data.code === 0) {
+            return response.data.result;
+        }
     },
     (error) => {
         console.error(error);

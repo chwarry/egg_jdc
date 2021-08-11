@@ -91,6 +91,7 @@ module.exports = {
             // message = `欢迎回来，${nickname}`;
             // const pt_pin = currentCookie.match(/pt_pin=(.*?);/)[1];
             // this.sendNotify("egg_jdc 运行通知", `用户 ${nickname}(${decodeURIComponent(pt_pin)}) 已更新 CK"`);
+            // this.enabledEnv(eid)
         }
         return {
             code: 0,
@@ -102,9 +103,7 @@ module.exports = {
     },
 
     async getNicknameOrBean(currentCookie, bean) {
-        const {
-            data: { data }
-        } = await this.curl(
+        const result = await this.curl(
             `https://me-api.jd.com/user_new/info/GetJDUserInfoUnion?orgFlag=JD_PinGou_New&callSource=mainorder&channel=4&isHomewhite=0&sceneval=2&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=ls`,
             {
                 headers: {
@@ -120,13 +119,15 @@ module.exports = {
                 dataType: "json"
             }
         );
-        if (bean) {
-            return {
-                nickName: data.userInfo.baseInfo.nickname || decodeURIComponent(this.pt_pin),
-                beanNum: data.assetInfo.beanNum
-            };
-        } else if (data.userInfo) {
-            return data.userInfo.baseInfo.nickname || decodeURIComponent(this.pt_pin);
+        if (result.retcode === 0) {
+            if (bean) {
+                return {
+                    nickName: result.data.userInfo.baseInfo.nickname,
+                    beanNum: result.data.assetInfo.beanNum
+                };
+            } else {
+                return result.data.userInfo.baseInfo.nickname;
+            }
         }
         this.logger.info(`获取用户信息失败，请检查您的 cookie ！`);
         return "";
@@ -590,6 +591,18 @@ module.exports = {
                 this.logger.info(stdout);
             }
         });
+    },
+
+    async checkCookie() {
+        for (const env of envs) {
+            const pt_pin = env.value.match(/pt_pin=(.*?);/)[1];
+            let nickName = await this.getNicknameOrBean(env.value);
+
+            if (!nickName && env.status != 1) {
+                this.disableEnv(env._id);
+                this.sendNotify(`禁用cookie--${nickname}(${decodeURIComponent(pt_pin)})`, env.value);
+            }
+        }
     }
 };
 

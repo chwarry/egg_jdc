@@ -6,6 +6,8 @@
     },
     "dependencies": {
         "axios": "^0.21.1",
+        "element-plus": "^1.0.2-beta.70",
+        "install": "^0.13.0",
         "pinia": "^2.0.0-beta.3",
         "sass": "^1.37.5",
         "sass-loader": "^12.1.0",
@@ -19,6 +21,7 @@
         "daisyui": "latest",
         "postcss": "latest",
         "tailwindcss": "latest",
-        "vite": "latest"
+        "vite": "latest",
+        "vite-plugin-style-import": "^1.1.1"
     }
 }
