@@ -14,15 +14,21 @@
         >
             <div class="card-body">
                 <h4 class="card-title">{{ item.name }}</h4>
-                <progress
-                    class="progress progress-accent"
-                    :value="item.marginCount"
-                    :max="item.allCount"
-                ></progress>
-                <div class="flex justify-between mt-5">
-                    <p>余量:{{ item.marginCount }}</p>
-                    <p>最大:{{ item.allCount }}</p>
+                <div v-if="item.activite">
+                    <progress
+                        class="progress progress-accent"
+                        :value="item.marginCount"
+                        :max="item.allCount"
+                    ></progress>
+                    <div class="flex justify-between mt-5">
+                        <p>余量:{{ item.marginCount }}</p>
+                        <p>最大:{{ item.allCount }}</p>
+                    </div>
                 </div>
+                <div v-else>
+                    <p>本节点已离线,请选择其他节点</p>
+                </div>
+
                 <div class="card-actions" v-if="item.activite">
                     <button class="btn btn-primary" @click="addJieDian(item)">加入节点</button>
                     <button class="btn btn-accent" @click="jiedianDetail">节点详情</button>
@@ -52,8 +58,9 @@
                     lock: true,
                     text: '正在加载中...',
                 });
-
-                state.nodeList = await getNodeList();
+                let res = await getNodeList();
+                console.log(res);
+                state.nodeList = res;
                 state.gonggao = await getGonggao();
 
                 state.loading.close();

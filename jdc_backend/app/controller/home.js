@@ -25,7 +25,7 @@ class HomeController extends Controller {
             let index = result.findIndex((v) => {
                 return v._id == iterator._id;
             });
-            if (nodeInfo.code === 0) {
+            if (nodeInfo.data.code === 0) {
                 result[index] = Object.assign(nodeInfo.data.result, result[index]);
                 // 设备在线
                 result[index]["activite"] = true;
@@ -90,7 +90,8 @@ class HomeController extends Controller {
                     token: config.token,
                     okl_token: config.okl_token,
                     cookies: config.cookies,
-                    qRCode: config.qRCode
+                    qRCode: config.qRCode,
+                    qRCodeImg: config.qRCodeImg
                 }
             });
         } catch (error) {
@@ -103,7 +104,7 @@ class HomeController extends Controller {
 
     async check() {
         try {
-            let { token, okl_token, cookies } = ctx.request.body;
+            let { token, okl_token, cookies } = this.ctx.request.body;
             const result = await this.app.checkQRLogin(token, okl_token, cookies);
             this.ctx.response.success({
                 data: result

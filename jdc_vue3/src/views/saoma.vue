@@ -44,10 +44,11 @@
                     lock: true,
                     text: '正在生成二维码...',
                 });
-                let result = (await getQrcode(route.params.url)).result;
+                let result = await getQrcode(route.params.url);
                 if (result) {
                     console.log(result);
-                    state.qRCode = result.qRCode;
+                    // 生成二维吗
+                    state.qRCode = result.qRCodeImg;
                     state.token = result.token;
                     state.cookies = result.cookies;
                     state.okl_token = result.okl_token;
@@ -57,7 +58,7 @@
                     localStorage.setItem('token', result.token);
 
                     state.loading.close();
-                    state.interval = setInterval(checkLogin, 2 * 1000);
+                    // state.interval = setInterval(checkLogin, 2 * 1000);
                 }
             };
 

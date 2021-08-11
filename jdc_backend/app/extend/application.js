@@ -2,7 +2,7 @@
 
 const { readFile, writeFile } = require("fs").promises;
 const path = require("path");
-// const QRCode = require("qrcode");
+const QRCode = require("qrcode");
 const dayjs = require("dayjs");
 const isBetween = require("dayjs/plugin/isBetween");
 const utc = require("dayjs/plugin/utc");
@@ -286,8 +286,10 @@ module.exports = {
 
         const token = configData.token;
         let qrcode;
+        let qRCodeImg;
         if (token) {
             qrcode = `https://plogin.m.jd.com/cgi-bin/m/tmauth?appid=300&client_type=m&token=${token}`;
+            qRCodeImg = await QRCode.toDataURL(`https://plogin.m.jd.com/cgi-bin/m/tmauth?appid=300&client_type=m&token=${this.token}`);
         }
         const cookies = configHeaders["set-cookie"][0];
         const okl_token = cookies.substring(cookies.indexOf("=") + 1, cookies.indexOf(";"));
@@ -296,7 +298,8 @@ module.exports = {
             token: token,
             cookies: cookies,
             okl_token: okl_token,
-            qRCode: qrcode
+            qRCode: qrcode,
+            qRCodeImg
         };
     },
 
