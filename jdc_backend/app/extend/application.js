@@ -289,7 +289,7 @@ module.exports = {
         let qRCodeImg;
         if (token) {
             qrcode = `https://plogin.m.jd.com/cgi-bin/m/tmauth?appid=300&client_type=m&token=${token}`;
-            qRCodeImg = await QRCode.toDataURL(`https://plogin.m.jd.com/cgi-bin/m/tmauth?appid=300&client_type=m&token=${this.token}`);
+            qRCodeImg = await QRCode.toDataURL(qrcode);
         }
         const cookies = configHeaders["set-cookie"][0];
         const okl_token = cookies.substring(cookies.indexOf("=") + 1, cookies.indexOf(";"));
@@ -325,7 +325,7 @@ module.exports = {
                 "Accept-Language": "zh-cn",
                 Referer: loginUrl,
                 "User-Agent": this.config.UA || random_time_ua(),
-                Cookie: this.config.cookies
+                Cookie: cookies
             },
             dataType: "json"
         });
@@ -342,15 +342,15 @@ module.exports = {
                 return result;
             } catch (error) {
                 return {
-                    code: error.code,
-                    message: error.message
+                    code: 2,
+                    message: "错误！请检查网络！"
                 };
             }
         }
 
         return {
-            code: data.errcode,
-            message: data.message
+            code: -1,
+            message: "授权登录未确认！"
         };
     },
 

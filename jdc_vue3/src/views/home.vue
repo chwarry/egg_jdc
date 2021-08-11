@@ -1,12 +1,11 @@
 <template>
-    <div class="flex flex-col justify-center align-middle lg:flex-row">
-        <div class="m-5 shadow-lg card">
-            <div class="card-body">
-                <h4 class="card-title">{{ gonggao.title }}</h4>
-                <p>{{ gonggao.content }}</p>
-            </div>
+    <div class="m-5 shadow-lg card">
+        <div class="card-body">
+            <h4 class="card-title">{{ gonggao.title }}</h4>
+            <p>{{ gonggao.content }}</p>
         </div>
-
+    </div>
+    <div class="flex flex-col justify-start align-middle lg:flex-row">
         <div
             class="m-5 shadow-lg card lg:card-side bordered"
             v-for="(item, index) in nodeList"
@@ -69,7 +68,9 @@
             const addJieDian = (item) => {
                 if (item.marginCount > 0) {
                     ElMessage.success('点击进入扫码界面');
-                    router.push({ name: 'saoma', params: { url: item.url } });
+                    localStorage.setItem('nodeUrl', item.url);
+                    localStorage.setItem('nodeName', item.name);
+                    router.push({ name: 'saoma' });
                 } else {
                     ElMessage.warning('没有位置了, 选择其他节点');
                 }

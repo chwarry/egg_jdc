@@ -1,19 +1,15 @@
 <template>
-    <div>
-        <div class="card bordered">
-            <div class="card-body">
-                <h4 class="card-title">扫码登陆</h4>
-                <p
-                    >请点击下方按钮登录，点击按钮后回到本网站查看是否登录成功，京东的升级提示不用管。</p
-                >
-                <div class="card-actions">
-                    <button class="btn btn-primary" @click="saomiao">扫描二维码登录</button>
-                    <button class="btn btn-accent" @click="openJdUrl">跳转到京东 App 登录</button>
-                </div>
+    <div class="m-10 card bordered">
+        <div class="card-body">
+            <h4 class="card-title">扫码登陆</h4>
+            <p>请点击下方按钮登录，点击按钮后回到本网站查看是否登录成功，京东的升级提示不用管。</p>
+            <div class="card-actions">
+                <button class="btn btn-primary" @click="saomiao">扫描二维码登录</button>
+                <button class="btn btn-accent" @click="openJdUrl">跳转到京东 App 登录</button>
             </div>
-            <figure v-if="saomiaoFlag">
-                <img :src="qRCode" />
-            </figure>
+        </div>
+        <div v-if="saomiaoFlag" class="flex justify-start mb-10 ml-10 align-middle">
+            <img :src="qRCode" class="w-40 lg:w-56" />
         </div>
     </div>
 </template>
@@ -21,13 +17,14 @@
 <script>
     import { reactive, toRefs, onMounted } from 'vue';
     import { useRouter, useRoute } from 'vue-router';
-    import { getActivityList, getQrcode, checkLoginCookie } from '@/config/api';
+    import { getQrcode, checkLoginCookie } from '@/config/api';
     import { ElMessage, ElLoading } from 'element-plus';
 
     export default {
         setup() {
             const router = useRouter();
             const route = useRoute();
+            let nodeUrl = '';
             const state = reactive({
                 qRCode: '',
                 activityList: [],
@@ -44,7 +41,7 @@
                     lock: true,
                     text: '正在生成二维码...',
                 });
-                let result = await getQrcode(route.params.url);
+                let result = await getQrcode(nodeUrl);
                 if (result) {
                     console.log(result);
                     // 生成二维吗
@@ -58,7 +55,7 @@
                     localStorage.setItem('token', result.token);
 
                     state.loading.close();
-                    // state.interval = setInterval(checkLogin, 2 * 1000);
+                    state.interval = setInterval(checkLogin, 2 * 1000);
                 }
             };
 
@@ -69,22 +66,22 @@
                     cookies: state.cookies || localStorage.getItem('cookies'),
                     okl_token: state.okl_token || localStorage.getItem('okl_token'),
                 };
-                let result = await checkLoginCookie(route.params.url, checkData);
+                let result = await checkLoginCookie(nodeUrl, checkData);
                 console.log(result);
-                // if (result.code === 0) {
-                // clearInterval(state.interval);
-                // ElMessage.success(result.message);
-                // localStorage.setItem('eid', result.result.eid);
-                // this.$router.push({ path: '/user' });
-                // } else {
-                //跳转页面
-                // this.$router.push({ path: '/home' });
-                // }
-                //清空二维码
-                // this.imageBase = '';
-                // localStorage.removeItem('okl_token');
-                // localStorage.removeItem('cookies');
-                // localStorage.removeItem('token');
+                if (result.code === 0) {
+                    clearInterval(state.interval);
+                    ElMessage.success(result.message);
+                    localStorage.setItem('eid', result.eid);
+                    localStorage.setItem('nickName', result.nickName);
+                    router.push({ path: '/user' });
+                } else if (result.code === 2) {
+                    //跳转回首页,重新加入
+                    state.qRCode = '';
+                    localStorage.removeItem('okl_token');
+                    localStorage.removeItem('cookies');
+                    localStorage.removeItem('token');
+                    router.push({ path: '/home' });
+                }
             };
 
             const saomiao = async () => {
@@ -107,7 +104,9 @@
                 window.location.href = href;
             };
 
-            onMounted(() => {});
+            onMounted(() => {
+                nodeUrl = localStorage.getItem('nodeUrl');
+            });
 
             return {
                 ...toRefs(state),

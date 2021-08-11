@@ -10,3 +10,12 @@ GET {{url}}/api/getActivity HTTP/1.1
 
 ###
 GET {{url}}/api/getGonggao HTTP/1.1
+
+###
+POST {{url}}/api/check HTTP/1.1
+
+{
+    "token": "m_tokenAAEAICbRDaW0c99aNyJBN74YnjXZ-OeyyrXmEauYvFjOGPFa",
+    "okl_token": "b7k7xhnm",
+    "cookies": "okl_token=b7k7xhnm; PATH=/; DOMAIN=.plogin.m.jd.com",
+}
