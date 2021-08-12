@@ -14,6 +14,7 @@ import 'package:jdc/routes/fluro_navigator.dart';
 import 'package:jdc/util/device_utils.dart';
 import 'package:jdc/util/qs_common.dart';
 import 'package:jdc/util/store.dart';
+import 'package:jdc/util/toast.dart';
 import 'package:jdc/util/utils.dart';
 import 'package:jdc/widgets/base_dialog.dart';
 import 'package:jdc/widgets/load_image.dart';
@@ -65,15 +66,24 @@ class _NodeInfoCardState extends State<NodeInfoCard> {
 
   // 检查是否登陆
   Future checkLogin() async {
-    await DioUtils.instance.requestNetwork(Method.get, HttpApi.checkLogin,
+    await DioUtils.instance.requestNetwork(Method.post, HttpApi.checkLogin,
         params: {"token": qrcode["token"], "okl_token": qrcode["okl_token"], "cookies": qrcode["cookies"]}, onSuccess: (resultList) {
       print(resultList);
-      SpUtil.putString("eid", resultList["eid"]);
-      SpUtil.putString("nickName", resultList["nickName"]);
-      SpUtil.putString("timestamp", resultList["timestamp"]);
-      _timer.cancel();
+      if (resultList["code"] == 0) {
+        Toast.show(resultList["message"]);
+        _timer.cancel();
+        SpUtil.putString("eid", resultList["eid"]);
+        SpUtil.putString("timestamp", resultList["timestamp"]);
+        // 更新user页面
+        screenStateController.setEid(resultList["eid"]);
+      } else if (resultList["code"] == 2) {
+        _timer.cancel();
+        // 退出, 访问失败, 退回访问节点页面
+        qrcode.clear();
+        Navigator.pop(context);
+        Toast.show(resultList["message"]);
+      }
 
-      screenStateController.setEid(resultList["eid"]);
       //刷新个人中心界面
       setState(() {});
     }, onError: (_, __) {
@@ -123,7 +133,7 @@ class _NodeInfoCardState extends State<NodeInfoCard> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.all(20),
-                                    child: Text("扫码完成后,返回本页面(app),查看是否登陆成功"),
+                                    child: Text("扫码完成后,返回本页面(app),查看是否登陆成功,升级提示不用管"),
                                   ),
                                   RepaintBoundary(
                                     key: jdsaoma,
