@@ -75,6 +75,7 @@
                     localStorage.setItem('nickName', result.nickName);
                     router.push({ path: '/user' });
                 } else if (result.code === 2) {
+                    ElMessage.error(result.message);
                     //跳转回首页,重新加入
                     state.qRCode = '';
                     localStorage.removeItem('okl_token');

@@ -1,6 +1,8 @@
 @url = http://127.0.0.1:9998
 
-GET {{url}}/api/qrcode HTTP/1.1
+
+###
+GET {{url}}/ HTTP/1.1
 
 ###
 GET {{url}}/api/getNodeList HTTP/1.1
@@ -11,11 +13,16 @@ GET {{url}}/api/getActivity HTTP/1.1
 ###
 GET {{url}}/api/getGonggao HTTP/1.1
 
+
+###
+GET {{url}}/api/qrcode HTTP/1.1
+
 ###
 POST {{url}}/api/check HTTP/1.1
+Content-Type: application/json
 
 {
-    "token": "m_tokenAAEAICbRDaW0c99aNyJBN74YnjXZ-OeyyrXmEauYvFjOGPFa",
-    "okl_token": "b7k7xhnm",
-    "cookies": "okl_token=b7k7xhnm; PATH=/; DOMAIN=.plogin.m.jd.com",
+    "token": "m_tokenAAEAIDHr8V3e6_qD4SKe9PgLeRtpFT-0XCRXGdm9zHX76U2S",
+    "okl_token": "hxa2zxnn",
+    "cookies": "guid=23a0206e34c0a54b78f0293c7962f6382ad241dee65e132b8a9139ebaa5e8ec5;lang=chs;lsid=qw7ctcbzry3wvxu4a7omo7zafb2ymdldasp4513w07sv4mzf;ls_token=n2os3ro3;"
 }

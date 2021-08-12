@@ -1,5 +1,10 @@
 import http from '@/utils/request';
 
+const getJdcInfo = async () => {
+    let result = await http.get('/');
+    return result;
+};
+
 const getNodeList = async () => {
     let result = await http.get('/api/getNodeList');
     return result;
@@ -25,4 +30,4 @@ const checkLoginCookie = async (url, data) => {
     return result;
 };
 
-export { getNodeList, getActivityList, getGonggao, getQrcode, checkLoginCookie };
+export { getNodeList, getActivityList, getGonggao, getQrcode, checkLoginCookie, getJdcInfo };

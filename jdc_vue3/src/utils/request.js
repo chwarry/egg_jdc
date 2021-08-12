@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ElMessage } from 'element-plus';
 
 const http = axios.create({
     baseURL: process.env.VUE_APP_CURENV !== 'development' ? 'http://127.0.0.1:9998/' : '',

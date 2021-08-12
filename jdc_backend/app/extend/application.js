@@ -1,6 +1,6 @@
 "use strict";
 
-const { readFile, writeFile } = require("fs").promises;
+const { readFile } = require("fs").promises;
 const path = require("path");
 const QRCode = require("qrcode");
 const dayjs = require("dayjs");
@@ -239,6 +239,7 @@ module.exports = {
 
     async getQRConfig() {
         const taskUrl = `https://plogin.m.jd.com/cgi-bin/mm/new_login_entrance?lang=chs&appid=300&returnurl=https://wq.jd.com/passport/LoginRedirect?state=${Date.now()}&returnurl=https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport`;
+
         const response = await this.curl(taskUrl, {
             headers: {
                 Connection: "Keep-Alive",
@@ -291,12 +292,17 @@ module.exports = {
             qrcode = `https://plogin.m.jd.com/cgi-bin/m/tmauth?appid=300&client_type=m&token=${token}`;
             qRCodeImg = await QRCode.toDataURL(qrcode);
         }
+
         const cookies = configHeaders["set-cookie"][0];
         const okl_token = cookies.substring(cookies.indexOf("=") + 1, cookies.indexOf(";"));
-
+        // 输出到terminal
+        QRCode.toString(qrcode, { type: "terminal", scale: 1, small: true }, function (err, string) {
+            if (err) throw err;
+            console.log(string);
+        });
         return {
             token: token,
-            cookies: cookies,
+            cookies: cookqr,
             okl_token: okl_token,
             qRCode: qrcode,
             qRCodeImg
@@ -310,6 +316,7 @@ module.exports = {
         const nowTime = Date.now();
         const loginUrl = `https://plogin.m.jd.com/login/login?appid=300&returnurl=https://wqlogin2.jd.com/passport/LoginRedirect?state=${nowTime}&returnurl=//home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&/myJd/home.action&source=wq_passport`;
         const getUserCookieUrl = `https://plogin.m.jd.com/cgi-bin/m/tmauthchecktoken?&token=${token}&ou_state=0&okl_token=${okl_token}`;
+
         const response = await this.curl(getUserCookieUrl, {
             method: "POST",
             data: {

@@ -8,6 +8,7 @@ const { readFile } = require("fs").promises;
 class HomeController extends Controller {
     async index() {
         this.ctx.response.success({
+            data: JSON.parse(await readFile(path.join(process.cwd(), "package.json"))).version,
             message: "egg_jdc backend is ready"
         });
     }

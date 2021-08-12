@@ -5,6 +5,7 @@
             <p>{{ gonggao.content }}</p>
         </div>
     </div>
+    <div class="divider"></div>
     <div class="flex flex-col justify-start align-middle lg:flex-row">
         <div
             class="m-5 shadow-lg card lg:card-side bordered"
