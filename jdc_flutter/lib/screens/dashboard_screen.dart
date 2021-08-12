@@ -34,9 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           children: [
             Header(),
             SizedBox(height: defaultPadding),
-            Selector<ScreenStateController, String>(
-                builder: (_, qrcode, __) {
-                  return qrcode == ""
+            Selector<ScreenStateController, String?>(
+                builder: (_, eid, __) {
+                  return eid == ""
                       ? Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

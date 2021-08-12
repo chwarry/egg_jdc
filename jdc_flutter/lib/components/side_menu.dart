@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:jdc/controllers/ScreenStateController.dart';
 import 'package:jdc/util/store.dart';
+import 'package:provider/provider.dart';
 
 class SideMenu extends StatefulWidget {
   const SideMenu({
@@ -36,37 +37,59 @@ class _SideMenuState extends State<SideMenu> {
               screenStateController!.setScreenIndex(0);
             },
           ),
-          DrawerListTile(
-            title: "任务列表",
-            svgSrc: "assets/icons/menu_task.svg",
-            press: () {
-              screenStateController!.setScreenIndex(2);
-            },
-          ),
-          DrawerListTile(
-            title: "京豆变化",
-            svgSrc: "assets/icons/menu_profile.svg",
-            press: () {
-              screenStateController!.setScreenIndex(3);
-            },
-          ),
-          // DrawerListTile(
-          //   title: "Notification",
-          //   svgSrc: "assets/icons/menu_notification.svg",
-          //   press: () {},
-          // ),
-          // DrawerListTile(
-          //   title: "Profile",
-          //   svgSrc: "assets/icons/menu_profile.svg",
-          //   press: () {},
-          // ),
-          DrawerListTile(
-            title: "设置",
-            svgSrc: "assets/icons/menu_setting.svg",
-            press: () {
-              screenStateController!.setScreenIndex(4);
-            },
-          ),
+          Selector<ScreenStateController, String?>(
+              builder: (_, eid, __) {
+                return eid == ""
+                    ? Column(
+                        children: [
+                          DrawerListTile(
+                            title: "个人中心",
+                            svgSrc: "assets/icons/menu_profile.svg",
+                            press: () {
+                              screenStateController!.setScreenIndex(1);
+                            },
+                          ),
+                          DrawerListTile(
+                            title: "任务列表",
+                            svgSrc: "assets/icons/menu_task.svg",
+                            press: () {
+                              screenStateController!.setScreenIndex(2);
+                            },
+                          ),
+                          DrawerListTile(
+                            title: "京豆变化",
+                            svgSrc: "assets/icons/menu_profile.svg",
+                            press: () {
+                              screenStateController!.setScreenIndex(3);
+                            },
+                          ),
+                        ],
+                      )
+                    : Container();
+              },
+              selector: (_, store) => store.eid),
+          // Selector<ScreenStateController, String?>(
+          //     builder: (_, eid, __) {
+          //       return DrawerListTile(
+          //         title: "任务列表",
+          //         svgSrc: "assets/icons/menu_task.svg",
+          //         press: () {
+          //           screenStateController!.setScreenIndex(2);
+          //         },
+          //       );
+          //     },
+          //     selector: (_, store) => store.eid),
+          // Selector<ScreenStateController, String?>(
+          //     builder: (_, eid, __) {
+          //       return DrawerListTile(
+          //         title: "京豆变化",
+          //         svgSrc: "assets/icons/menu_profile.svg",
+          //         press: () {
+          //           screenStateController!.setScreenIndex(3);
+          //         },
+          //       );
+          //     },
+          //     selector: (_, store) => store.eid),
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sp_util/sp_util.dart';
 
 class ScreenStateController extends ChangeNotifier {
   int _screentIndex = 0;
@@ -17,8 +18,8 @@ class ScreenStateController extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _eid = "";
-  String get eid => _eid;
+  String? _eid = SpUtil.getString("key");
+  String? get eid => _eid;
 
   void setEid(String str) {
     _eid = str;

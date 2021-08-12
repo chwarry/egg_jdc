@@ -17,7 +17,6 @@ import 'package:jdc/util/store.dart';
 import 'package:jdc/util/toast.dart';
 import 'package:jdc/util/utils.dart';
 import 'package:jdc/widgets/base_dialog.dart';
-import 'package:jdc/widgets/load_image.dart';
 import 'package:jdc/widgets/my_button.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -73,7 +72,6 @@ class _NodeInfoCardState extends State<NodeInfoCard> {
         Toast.show(resultList["message"]);
         _timer.cancel();
         SpUtil.putString("eid", resultList["eid"]);
-        SpUtil.putString("timestamp", resultList["timestamp"]);
         // 更新user页面
         screenStateController.setEid(resultList["eid"]);
       } else if (resultList["code"] == 2) {
