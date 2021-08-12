@@ -88,22 +88,21 @@ module.exports = {
             // if (body.code !== 200) {
             //     throw new qlError(body.message || "更新账户错误，请重试", -1, 200);
             // }
-            // message = `欢迎回来，${nickname}`;
+            message = `欢迎回来，${nickname}`;
             // const pt_pin = currentCookie.match(/pt_pin=(.*?);/)[1];
             // this.sendNotify("egg_jdc 运行通知", `用户 ${nickname}(${decodeURIComponent(pt_pin)}) 已更新 CK"`);
             // this.enabledEnv(eid)
         }
         return {
             code: 0,
-            nickName: nickname,
             eid: eid,
-            timestamp: dayjs().format("YYYY-MM-DD"),
+            timestamp: dayjs().format("YYYY-MM-DD HH:hh:mm"),
             message
         };
     },
 
     async getNicknameOrBean(currentCookie, bean) {
-        const result = await this.curl(
+        const { data: result } = await this.curl(
             `https://me-api.jd.com/user_new/info/GetJDUserInfoUnion?orgFlag=JD_PinGou_New&callSource=mainorder&channel=4&isHomewhite=0&sceneval=2&_=${Date.now()}&sceneval=2&g_login_type=1&g_ty=ls`,
             {
                 headers: {
@@ -119,7 +118,7 @@ module.exports = {
                 dataType: "json"
             }
         );
-        if (result.retcode === 0) {
+        if (result.retcode === "0") {
             if (bean) {
                 return {
                     nickName: result.data.userInfo.baseInfo.nickname,
@@ -368,20 +367,18 @@ module.exports = {
             throw new qlError("没有找到这个账户，重新登录试试看哦", -1, 200);
         }
         const currentCookie = env.value;
-        timestamp = env.timestamp;
         const remarks = env.remarks;
         let remark = "";
         if (remarks) {
             remark = remarks.match(/remark=(.*?);/) && remarks.match(/remark=(.*?);/)[1];
         }
         let nickName = await this.getNicknameOrBean(currentCookie);
-        let pt_pin = currentCookie.match(/pt_pin=(.*?);/)[1];
         return {
             nickName,
             eid,
-            timestamp,
+            timestamp: dayjs(env.timestamp).format("YYYY-MM-DD HH:hh:mm"),
             remark,
-            pt_pin
+            status: env.status
         };
     },
 

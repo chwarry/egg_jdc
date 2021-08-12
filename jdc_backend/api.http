@@ -13,6 +13,9 @@ GET {{url}}/api/getActivity HTTP/1.1
 ###
 GET {{url}}/api/getGonggao HTTP/1.1
 
+###
+GET {{url}}/api/userInfo?eid=sq4SkGgYW9DwidxO HTTP/1.1
+
 
 ###
 GET {{url}}/api/qrcode HTTP/1.1

@@ -120,13 +120,14 @@ class HomeController extends Controller {
 
     async userInfo() {
         try {
-            const config = await this.app.getUserInfoByEid(this.ctx.query.eid);
+            const { nickName, eid, timestamp, remark, status } = await this.app.getUserInfoByEid(this.ctx.query.eid);
             this.ctx.response.success({
                 data: {
-                    token: config.token,
-                    okl_token: config.okl_token,
-                    cookies: config.cookies,
-                    qRCode: config.qRCode
+                    nickName,
+                    eid,
+                    timestamp,
+                    remark,
+                    status
                 }
             });
         } catch (error) {

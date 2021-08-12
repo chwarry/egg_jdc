@@ -8,7 +8,7 @@ module.exports = (app) => {
     router.get("/", controller.home.index);
     router.get("/api/qrcode", controller.home.qrCode);
     router.post("/api/check", controller.home.check);
-    router.get("/api/userinfo", controller.home.userInfo);
+    router.get("/api/userInfo", controller.home.userInfo);
     router.delete("/api/delaccount", controller.home.delAccount);
     router.put("/api/disaccount", controller.home.disableAccount);
     router.put("/api/emaaccount", controller.home.enableAccount);

@@ -1,8 +1,9 @@
 <template>
-    <div class="m-10 card bordered">
+    <div class="m-10 shadow-lg card bordered">
         <div class="card-body">
             <h4 class="card-title">扫码登陆</h4>
             <p>请点击下方按钮登录，点击按钮后回到本网站查看是否登录成功，京东的升级提示不用管。</p>
+            <p>选择登陆的节点: ({{ nodeName }}})</p>
             <div class="card-actions">
                 <button class="btn btn-primary" @click="saomiao">扫描二维码登录</button>
                 <button class="btn btn-accent" @click="openJdUrl">跳转到京东 App 登录</button>
@@ -19,9 +20,12 @@
     import { useRouter, useRoute } from 'vue-router';
     import { getQrcode, checkLoginCookie } from '@/config/api';
     import { ElMessage, ElLoading } from 'element-plus';
+    import { useTitle, useIntervalFn } from '@vueuse/core';
 
     export default {
         setup() {
+            const title = useTitle();
+            title.value = '扫码';
             const router = useRouter();
             const route = useRoute();
             let nodeUrl = '';
@@ -33,10 +37,20 @@
                 okl_token: '',
                 saomiaoFlag: false,
                 loading: false,
-                interval: null,
+                nodeName: '',
+            });
+
+            const { pause, resume, isActive } = useIntervalFn(checkLogin, 2 * 1000, {
+                immediate: false,
+                immediateCallback: true,
             });
 
             const getQRConfig = async () => {
+                if (!nodeUrl) {
+                    ElMessage.error('没有选择节点, 跳转到首页');
+                    router.push({ path: '/' });
+                    return;
+                }
                 state.loading = ElLoading.service({
                     lock: true,
                     text: '正在生成二维码...',
@@ -55,7 +69,8 @@
                     localStorage.setItem('token', result.token);
 
                     state.loading.close();
-                    state.interval = setInterval(checkLogin, 2 * 1000);
+
+                    resume();
                 }
             };
 
@@ -69,19 +84,19 @@
                 let result = await checkLoginCookie(nodeUrl, checkData);
                 console.log(result);
                 if (result.code === 0) {
-                    clearInterval(state.interval);
-                    ElMessage.success(result.message);
+                    pause();
+                    ElMessage.success(result.message || `欢迎回来  ${result.nickName}`);
                     localStorage.setItem('eid', result.eid);
-                    localStorage.setItem('nickName', result.nickName);
                     router.push({ path: '/user' });
                 } else if (result.code === 2) {
+                    pause();
                     ElMessage.error(result.message);
                     //跳转回首页,重新加入
                     state.qRCode = '';
                     localStorage.removeItem('okl_token');
                     localStorage.removeItem('cookies');
                     localStorage.removeItem('token');
-                    router.push({ path: '/home' });
+                    router.push({ path: '/' });
                 }
             };
 
@@ -107,6 +122,7 @@
 
             onMounted(() => {
                 nodeUrl = localStorage.getItem('nodeUrl');
+                state.nodeName = localStorage.getItem('nodeName');
             });
 
             return {

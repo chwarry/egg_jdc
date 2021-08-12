@@ -174,6 +174,21 @@
   resolved "https://registry.nlark.com/@vue/shared/download/@vue/shared-3.2.1.tgz#1f1fe26fe0334404cce10740b5ffb2654f1281aa"
   integrity sha1-Hx/ib+AzRATM4QdAtf+yZU8Sgao=
 
+"@vueuse/core@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.nlark.com/@vueuse/core/download/@vueuse/core-5.3.0.tgz#d8c6e939e18089afa224fab6e443fae2bdb57a51"
+  integrity sha1-2MbpOeGAia+iJPq25EP64r21elE=
+  dependencies:
+    "@vueuse/shared" "5.3.0"
+    vue-demi "*"
+
+"@vueuse/shared@5.3.0":
+  version "5.3.0"
+  resolved "https://registry.nlark.com/@vueuse/shared/download/@vueuse/shared-5.3.0.tgz#2b9583f80f1284242f808925e7e141310e400e45"
+  integrity sha1-K5WD+A8ShCQvgIkl5+FBMQ5ADkU=
+  dependencies:
+    vue-demi "*"
+
 acorn-node@^1.6.1:
   version "1.8.2"
   resolved "https://registry.npm.taobao.org/acorn-node/download/acorn-node-1.8.2.tgz#114c95d64539e53dede23de8b9d96df7c7ae2af8"
@@ -1429,7 +1444,7 @@ vite@latest:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vue-demi@latest:
+vue-demi@*, vue-demi@latest:
   version "0.11.2"
   resolved "https://registry.nlark.com/vue-demi/download/vue-demi-0.11.2.tgz#faa06da53887c493a695b997f4fcb4784a667990"
   integrity sha1-+qBtpTiHxJOmlbmX9Py0eEpmeZA=

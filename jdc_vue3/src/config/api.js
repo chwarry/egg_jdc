@@ -30,4 +30,23 @@ const checkLoginCookie = async (url, data) => {
     return result;
 };
 
-export { getNodeList, getActivityList, getGonggao, getQrcode, checkLoginCookie, getJdcInfo };
+const getUserInfo = async (url, eid) => {
+    let result = await http.get(`${url}/api/userInfo?eid=${eid}`);
+    return result;
+};
+
+const deleteUser = async (url, eid) => {
+    let result = await http.delete(`${url}/api/delaccount`, { eid });
+    return result;
+};
+
+export {
+    getNodeList,
+    getActivityList,
+    getGonggao,
+    getQrcode,
+    checkLoginCookie,
+    getJdcInfo,
+    getUserInfo,
+    deleteUser,
+};

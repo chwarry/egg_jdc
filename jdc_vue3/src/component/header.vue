@@ -1,6 +1,6 @@
 <template>
     <div
-        class="sticky inset-x-0 top-0 z-50 hidden w-full py-1 transition duration-200 ease-in-out border-b  lg:block border-base-200 bg-base-100"
+        class="sticky inset-x-0 top-0 z-50 w-full py-1 transition duration-200 ease-in-out border-b  lg:block border-dark-600 bg-base-100"
     >
         <div class="mx-auto space-x-1 navbar max-w-none">
             <div class="flex items-center flex-none">
